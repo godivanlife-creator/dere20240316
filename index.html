@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>得意 Dere 🐶</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=DM+Sans:wght@400;500&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --cream:#f8f4ee;
+  --warm:#ede4d4;
+  --sand:#b89060;
+  --dark:#180e00;
+  --accent:#2e7d32;
+  --accent2:#4caf50;
+}
+
+body{
+  background:var(--cream);
+  font-family:'DM Sans','Noto Sans JP',sans-serif;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
+}
+
+/* ─── 語言列 ─── */
+.lang-bar{
+  position:fixed;
+  top:14px;
+  right:14px;
+  display:flex;
+  gap:6px;
+  z-index:100;
+}
+.lang-btn{
+  padding:6px 12px;
+  border-radius:99px;
+  border:none;
+  background:rgba(0,0,0,0.35);
+  color:#fff;
+  cursor:pointer;
+  font-size:0.8rem;
+  backdrop-filter:blur(6px);
+  transition:background 0.2s,color 0.2s;
+}
+.lang-btn.active{
+  background:#fff;
+  color:var(--accent);
+  font-weight:600;
+}
+
+/* ─── HERO ─── */
+.hero{
+  width:100%;
+  text-align:center;
+  padding:60px 20px 28px;
+  background:linear-gradient(160deg,#1a3a1c,#2e6030,#2e7d32,#4caf50);
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:"⚽";
+  position:absolute;
+  font-size:150px;
+  opacity:0.07;
+  left:-20px;
+  bottom:-20px;
+  transform:rotate(-10deg);
+}
+.hero::after{
+  content:"🏀";
+  position:absolute;
+  font-size:110px;
+  opacity:0.06;
+  right:-10px;
+  top:-10px;
+  transform:rotate(15deg);
+}
+
+.avatar-ring{
+  width:124px;
+  height:124px;
+  border-radius:50%;
+  overflow:hidden;
+  margin:auto;
+  border:4px solid rgba(255,255,255,0.45);
+  box-shadow:0 12px 36px rgba(0,0,0,0.3);
+  animation:pop 0.55s cubic-bezier(0.34,1.56,0.64,1);
+  background:rgba(255,255,255,0.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:56px;
+}
+.avatar-ring img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+@keyframes pop{
+  from{transform:scale(0.6);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+
+.hero-name{
+  font-family:'Playfair Display',serif;
+  font-size:2.5rem;
+  margin-top:12px;
+  letter-spacing:0.02em;
+}
+.hero-sub{
+  font-size:0.85rem;
+  opacity:0.7;
+  margin-top:4px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+.hero-warning{
+  margin:16px auto 0;
+  max-width:340px;
+  background:rgba(0,0,0,0.25);
+  border:1.5px solid rgba(255,255,255,0.25);
+  border-radius:12px;
+  padding:12px 16px;
+  font-size:0.88rem;
+  font-weight:600;
+  line-height:1.5;
+  backdrop-filter:blur(4px);
+}
+
+/* ─── 卡片區 ─── */
+.card-wrap{
+  max-width:420px;
+  width:100%;
+  padding:16px 16px 40px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.card{
+  background:#fff;
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 4px 18px rgba(0,0,0,0.07);
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.info-item{
+  background:var(--cream);
+  border-radius:12px;
+  padding:14px;
+}
+.info-label{
+  font-size:0.7rem;
+  color:var(--sand);
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  margin-bottom:4px;
+}
+.info-value{
+  font-size:0.95rem;
+  color:var(--dark);
+  font-weight:500;
+  line-height:1.4;
+}
+.personality-card{
+  background:var(--cream);
+  border-radius:12px;
+  padding:14px;
+  margin-top:10px;
+}
+.skill-card{
+  background:#f0f7f0;
+  border:1.5px solid #a5d6a7;
+  border-radius:12px;
+  padding:14px;
+  margin-top:10px;
+  font-size:0.92rem;
+  color:#1b5e20;
+  font-weight:500;
+  line-height:1.6;
+}
+
+.btn{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  padding:16px;
+  border-radius:14px;
+  text-decoration:none;
+  font-weight:500;
+  font-size:1rem;
+  transition:opacity 0.15s,transform 0.15s;
+  cursor:pointer;
+  border:none;
+  width:100%;
+}
+.btn:active{opacity:0.85;transform:scale(0.98);}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-ig{
+  background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+  color:#fff;
+}
+
+.gps-card{
+  background:linear-gradient(135deg,#1a3a1c,#2e6030);
+  color:#fff;
+  padding:20px;
+  border-radius:18px;
+}
+.gps-desc{
+  font-size:0.88rem;
+  opacity:0.8;
+  margin-bottom:12px;
+}
+.btn-gps{
+  background:rgba(255,255,255,0.15);
+  color:#fff;
+  border:1.5px solid rgba(255,255,255,0.3);
+  backdrop-filter:blur(4px);
+}
+
+.fade{animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(8px);}
+  to{opacity:1;transform:translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('zh',this)">中</button>
+  <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+  <button class="lang-btn" onclick="setLang('ja',this)">日</button>
+</div>
+
+<div class="hero">
+  <div class="avatar-ring">🐶</div>
+  <div class="hero-name">得意 Dere</div>
+  <div class="hero-sub">GodiVanLife Pet Tag</div>
+  <div class="hero-warning" id="t-warning"></div>
+</div>
+
+<div class="card-wrap" id="wrap">
+
+  <div class="card">
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-label" id="t-breed-label"></div>
+        <div class="info-value" id="t-breed"></div>
+      </div>
+      <div class="info-item">
+        <div class="info-label" id="t-personality-label"></div>
+        <div class="info-value" id="t-personality"></div>
+      </div>
+    </div>
+    <div class="personality-card">
+      <div class="info-label" id="t-about-label"></div>
+      <div class="info-value" id="t-about"></div>
+    </div>
+    <div class="skill-card" id="t-skill"></div>
+  </div>
+
+  <a class="btn btn-primary" href="tel:0988313193" id="t-call"></a>
+
+  <div class="gps-card">
+    <p class="gps-desc" id="t-gps-desc"></p>
+    <button class="btn btn-gps" id="gps-btn" onclick="sendGPS()"></button>
+  </div>
+
+  <a class="btn btn-ig" href="https://www.instagram.com/dere20240316/" target="_blank" id="t-ig"></a>
+
+</div>
+
+<script>
+const i18n={
+  zh:{
+    warning:"📍 得意迷路了！請幫忙回報位置 🥺",
+    breedLabel:"🐶 品種",
+    breed:"傑克羅素㹴",
+    personalityLabel:"✨ 個性",
+    personality:"活潑得意 · 運動狂",
+    aboutLabel:"⚽ 關於得意",
+    about:"超級愛玩足球和籃球 🏀 會用頭運球，還會把球控回來給主人！",
+    skill:"🏆 絕技：頭部運球控球、把球送回主人手中",
+    call:"📞 聯絡得意的主人",
+    gpsDesc:"發現得意了嗎？請點擊下方按鈕回報位置給主人",
+    gpsBtn:"📍 立即回報位置",
+    gpsLoading:"定位中...",
+    gpsError:"定位失敗，請重試",
+    ig:"📸 看得意的 IG 日常"
+  },
+  en:{
+    warning:"📍 Dere is lost! Please help report the location 🥺",
+    breedLabel:"🐶 Breed",
+    breed:"Jack Russell Terrier",
+    personalityLabel:"✨ Personality",
+    personality:"Energetic · Sports lover",
+    aboutLabel:"⚽ About Dere",
+    about:"Obsessed with soccer and basketball 🏀 Can dribble with his head and return the ball back to his owner!",
+    skill:"🏆 Special skill: heading the ball and bringing it back to owner",
+    call:"📞 Call Dere's Owner",
+    gpsDesc:"Found Dere? Please send your location to the owner",
+    gpsBtn:"📍 Send Location Now",
+    gpsLoading:"Getting location...",
+    gpsError:"Location failed, please retry",
+    ig:"📸 Dere on Instagram"
+  },
+  ja:{
+    warning:"📍 デレが迷子になりました！位置情報を送ってください 🥺",
+    breedLabel:"🐶 種類",
+    breed:"ジャック・ラッセル・テリア",
+    personalityLabel:"✨ 性格",
+    personality:"元気いっぱい · スポーツ好き",
+    aboutLabel:"⚽ デレについて",
+    about:"サッカーとバスケが大好き 🏀 頭でドリブルができて、ボールを飼い主に返すこともできる！",
+    skill:"🏆 得意技：頭部でのドリブル＆ボールを飼い主に戻す",
+    call:"📞 飼い主に電話",
+    gpsDesc:"デレを見つけたら、位置情報を飼い主に送ってください",
+    gpsBtn:"📍 今すぐ位置を送る",
+    gpsLoading:"取得中...",
+    gpsError:"失敗しました",
+    ig:"📸 インスタグラムを見る"
+  }
+};
+
+let lang='zh';
+
+function applyLang(){
+  const t=i18n[lang];
+  document.getElementById("t-warning").innerText=t.warning;
+  document.getElementById("t-breed-label").innerText=t.breedLabel;
+  document.getElementById("t-breed").innerText=t.breed;
+  document.getElementById("t-personality-label").innerText=t.personalityLabel;
+  document.getElementById("t-personality").innerText=t.personality;
+  document.getElementById("t-about-label").innerText=t.aboutLabel;
+  document.getElementById("t-about").innerText=t.about;
+  document.getElementById("t-skill").innerText=t.skill;
+  document.getElementById("t-call").innerText=t.call;
+  document.getElementById("t-gps-desc").innerText=t.gpsDesc;
+  document.getElementById("gps-btn").innerText=t.gpsBtn;
+  document.getElementById("t-ig").innerText=t.ig;
+}
+
+function setLang(l,el){
+  lang=l;
+  applyLang();
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const wrap=document.getElementById("wrap");
+  wrap.classList.remove("fade");
+  void wrap.offsetWidth;
+  wrap.classList.add("fade");
+}
+
+applyLang();
+
+function sendGPS(){
+  const btn=document.getElementById("gps-btn");
+  const t=i18n[lang];
+  btn.innerText=t.gpsLoading;
+  btn.disabled=true;
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const lat=pos.coords.latitude.toFixed(6);
+    const lng=pos.coords.longitude.toFixed(6);
+    const url=`https://maps.google.com/?q=${lat},${lng}`;
+    const msg=encodeURIComponent("🐶 發現得意 Dere！目前位置："+url);
+    window.location.href=`sms:0988313193?body=${msg}`;
+    resetGPS();
+  },()=>{
+    alert(t.gpsError);
+    resetGPS();
+  },{enableHighAccuracy:true,timeout:8000,maximumAge:0});
+}
+
+function resetGPS(){
+  const btn=document.getElementById("gps-btn");
+  btn.disabled=false;
+  btn.innerText=i18n[lang].gpsBtn;
+}
+</script>
+</body>
+</html>
