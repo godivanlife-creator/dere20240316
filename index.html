@@ -3,901 +3,940 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>得意 Dere — GodiVanLife Pokédex</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>得意 Dere — GodiVanLife</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* ══════════════════════
+   像素化基礎
+══════════════════════ */
 *{margin:0;padding:0;box-sizing:border-box;image-rendering:pixelated;}
 :root{
-  --dex-red:#cc2200;
-  --dex-red2:#ee3311;
-  --dex-red3:#ff5533;
-  --dex-dark:#1a0800;
-  --dex-hinge:#333;
-  --screen-bg:#9bbc0f;
-  --screen-dark:#0f380f;
-  --screen-mid:#306230;
-  --screen-light:#8bac0f;
-  --screen-white:#9bbc0f;
-  --inner-bg:#8fb0a0;
-  --btn-blue:#2244cc;
-  --btn-yellow:#ddaa00;
-  --pixel:3px;
-  --black:#000;
-  --white:#eee;
+  --black:#1a1c2c;
+  --dark:#2d2b55;
+  --mid:#3b4f7c;
+  --blue:#5a7abf;
+  --light:#8fb4e0;
+  --white:#e8f4f8;
+  --yellow:#f4d03f;
+  --yellow2:#f8e07a;
+  --red:#e74c3c;
+  --red2:#ff6b6b;
+  --green:#27ae60;
+  --green2:#58d68d;
+  --hp-green:#4eff91;
+  --hp-yellow:#ffeb3b;
+  --hp-red:#ff4444;
+  --pixel:4px;
 }
 
-html,body{
-height:100%;
-background:#111;
-display:flex;
-justify-content:center;
-align-items:flex-start;
+body{
+background:var(–black);
 font-family:‘Press Start 2P’,monospace;
-overflow-x:hidden;
-}
-
-/* ════════════════════════
-圖鑑機外殼
-════════════════════════ */
-.pokedex{
-width:100%;
-max-width:420px;
 min-height:100vh;
-background:var(–dex-red);
-position:relative;
-display:flex;
-flex-direction:column;
+overflow-x:hidden;
+cursor:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘16’ height=‘16’%3E%3Crect width=‘4’ height=‘4’ fill=’%23f4d03f’/%3E%3C/svg%3E”) 0 0, auto;
+}
+
+/* 像素邊框 mixin */
+.pixel-border{
+border: var(–pixel) solid var(–white);
 box-shadow:
-inset -4px 0 0 var(–dex-dark),
-inset 4px 0 0 rgba(255,255,255,.12),
-inset 0 4px 0 rgba(255,255,255,.12),
-6px 6px 0 var(–dex-dark);
+calc(var(–pixel) * -1) 0 0 var(–black),
+calc(var(–pixel) * 1) 0 0 var(–black),
+0 calc(var(–pixel) * -1) 0 var(–black),
+0 calc(var(–pixel) * 1) 0 var(–black),
+calc(var(–pixel) * -2) 0 0 var(–white),
+calc(var(–pixel) * 2) 0 0 var(–white),
+0 calc(var(–pixel) * -2) 0 var(–white),
+0 calc(var(–pixel) * 2) 0 var(–white);
 }
 
-/* 上殼反光 */
-.pokedex::before{
-content:’’;
-position:absolute;top:0;left:0;right:0;
-height:50%;
-background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);
-pointer-events:none;z-index:10;
-}
-
-/* 折頁紋 */
-.hinge{
-height:12px;
-background:repeating-linear-gradient(
-90deg,
-var(–dex-dark) 0px,var(–dex-dark) 4px,
-var(–dex-red) 4px,var(–dex-red) 8px
-);
-border-top:3px solid var(–dex-dark);
-border-bottom:3px solid var(–dex-dark);
-}
-
-/* ════════════════════════
-頂部燈飾區
-════════════════════════ */
-.dex-top{
-padding:16px 16px 10px;
-display:flex;
-align-items:center;
-gap:12px;
-border-bottom:4px solid var(–dex-dark);
-background:var(–dex-red2);
-}
-
-/* 大藍燈 */
-.big-light{
-width:44px;height:44px;
-border-radius:50%;
-background:radial-gradient(circle at 35% 35%,#88ccff,#2244aa);
-border:4px solid var(–dex-dark);
+.pixel-border-gold{
+border: var(–pixel) solid var(–yellow);
 box-shadow:
-inset -2px -2px 0 rgba(0,0,0,.4),
-inset 2px 2px 0 rgba(255,255,255,.3),
-0 0 12px rgba(100,180,255,.6);
-animation:bigLightPulse 2s ease-in-out infinite alternate;
-flex-shrink:0;
-}
-@keyframes bigLightPulse{
-from{box-shadow:inset -2px -2px 0 rgba(0,0,0,.4),inset 2px 2px 0 rgba(255,255,255,.3),0 0 8px rgba(100,180,255,.4);}
-to{box-shadow:inset -2px -2px 0 rgba(0,0,0,.4),inset 2px 2px 0 rgba(255,255,255,.3),0 0 24px rgba(100,180,255,.9);}
-}
-
-/* 小燈排 */
-.small-lights{display:flex;gap:6px;align-items:center;}
-.sml{width:12px;height:12px;border-radius:50%;border:2px solid var(–dex-dark);}
-.sml-r{background:#ff3333;box-shadow:0 0 6px #ff3333;}
-.sml-y{background:#ffdd00;box-shadow:0 0 6px #ffdd00;}
-.sml-g{background:#33ff66;box-shadow:0 0 6px #33ff66;animation:greenBlink 1.5s step-end infinite;}
-@keyframes greenBlink{0%,100%{opacity:1;}50%{opacity:.3;}}
-
-.dex-top-title{
-font-size:.45rem;color:rgba(255,255,255,.7);
-letter-spacing:.08em;margin-left:auto;
+calc(var(–pixel) * -1) 0 0 var(–black),
+calc(var(–pixel) * 1) 0 0 var(–black),
+0 calc(var(–pixel) * -1) 0 var(–black),
+0 calc(var(–pixel) * 1) 0 var(–black),
+calc(var(–pixel) * -2) 0 0 var(–yellow),
+calc(var(–pixel) * 2) 0 0 var(–yellow),
+0 calc(var(–pixel) * -2) 0 var(–yellow),
+0 calc(var(–pixel) * 2) 0 var(–yellow);
 }
 
-/* ════════════════════════
-語言切換（圖鑑風按鈕）
-════════════════════════ */
-.lang-row{
-display:flex;gap:4px;padding:8px 16px;
-background:var(–dex-red);
-border-bottom:3px solid var(–dex-dark);
+/* ══════════════════════
+星空背景
+══════════════════════ */
+.starfield{
+position:fixed;inset:0;pointer-events:none;z-index:0;
+background:var(–black);
+}
+.star{
+position:absolute;
+background:var(–white);
+animation:twinkle ease-in-out infinite alternate;
+}
+@keyframes twinkle{from{opacity:.2;}to{opacity:1;}}
+
+/* ══════════════════════
+語言列
+══════════════════════ */
+.lang-bar{
+position:fixed;top:12px;right:12px;
+display:flex;gap:8px;z-index:300;
 }
 .lang-btn{
-flex:1;padding:6px 4px;
-background:var(–dex-dark);border:3px solid var(–dex-dark);
-color:rgba(255,255,255,.5);
-font-family:‘Press Start 2P’,monospace;font-size:.4rem;
-cursor:pointer;box-shadow:2px 2px 0 rgba(0,0,0,.5);
+padding:6px 10px;
+background:var(–dark);
+border:3px solid var(–white);
+color:var(–white);
+font-family:‘Press Start 2P’,monospace;
+font-size:.45rem;cursor:pointer;
+image-rendering:pixelated;
 transition:none;
+box-shadow:3px 3px 0 var(–black);
 }
-.lang-btn.active{
-background:var(–btn-yellow);color:var(–dex-dark);
-border-color:var(–btn-yellow);
-box-shadow:2px 2px 0 var(–dex-dark);
-}
-.lang-btn:hover:not(.active){background:#333;}
+.lang-btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(–black);}
+.lang-btn.active{background:var(–yellow);color:var(–black);border-color:var(–yellow);}
 
-/* ════════════════════════
-主螢幕（上）
-════════════════════════ */
-.main-screen-wrap{
-padding:12px 16px 8px;
-background:var(–dex-red2);
-}
-.main-screen{
-background:var(–screen-dark);
-border:6px solid var(–dex-dark);
-box-shadow:
-inset 3px 3px 0 rgba(0,0,0,.5),
-inset -2px -2px 0 rgba(255,255,255,.05),
-3px 3px 0 var(–dex-dark);
-position:relative;overflow:hidden;
-}
-/* 螢幕掃描線 */
-.main-screen::after{
-content:’’;position:absolute;inset:0;pointer-events:none;
-background:repeating-linear-gradient(
-0deg,
-transparent 0px,transparent 3px,
-rgba(0,0,0,.15) 3px,rgba(0,0,0,.15) 4px
-);z-index:5;
-}
-/* 螢幕反光 */
-.main-screen::before{
-content:’’;position:absolute;top:0;left:0;right:0;height:40%;
-background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);
-pointer-events:none;z-index:6;
-}
-
-/* 精靈展示區 */
-.sprite-area{
-display:flex;align-items:center;justify-content:space-between;
-padding:16px 12px 8px;
+/* ══════════════════════
+HERO — 神奇寶貝戰鬥畫面
+══════════════════════ */
+.battle-screen{
 position:relative;
+width:100%;min-height:100svh;
+display:flex;flex-direction:column;
+background:linear-gradient(180deg,
+#1a1c2c 0%,
+#2d2b55 30%,
+#3b4f7c 55%,
+#2d5a3d 55%,
+#1e3d29 70%,
+#152c1e 100%
+);
+overflow:hidden;padding-bottom:20px;
 }
-.sprite-frame{
-width:100px;height:100px;
-background:var(–screen-bg);
-border:4px solid var(–screen-mid);
-display:flex;align-items:center;justify-content:center;
-position:relative;overflow:hidden;
-box-shadow:inset 2px 2px 0 rgba(0,0,0,.3);
+
+/* 像素草地 */
+.battle-ground{
+position:absolute;bottom:0;left:0;right:0;
+height:45%;
+background:repeating-linear-gradient(
+90deg,
+#2d5a3d 0px, #2d5a3d 8px,
+#1e3d29 8px, #1e3d29 16px
+);
 }
-.sprite-frame img{
-width:100%;height:100%;object-fit:cover;
-filter:contrast(1.1) saturate(1.2);
-animation:spriteIdle 2s ease-in-out infinite alternate;
+.battle-ground::before{
+content:’’;position:absolute;top:0;left:0;right:0;height:8px;
+background:var(–black);
+box-shadow:0 4px 0 #152c1e,0 8px 0 var(–black);
 }
-@keyframes spriteIdle{
+
+/* 敵方平台（野生神奇寶貝位置） */
+.enemy-platform{
+position:absolute;top:18%;right:8%;
+width:160px;height:24px;
+background:#3d7a52;
+border-radius:50%;
+box-shadow:0 8px 0 #1e3d29,0 12px 0 var(–black);
+}
+
+/* 我方平台 */
+.player-platform{
+position:absolute;bottom:30%;left:6%;
+width:200px;height:28px;
+background:#4a9a62;
+border-radius:50%;
+box-shadow:0 10px 0 #1e3d29,0 16px 0 var(–black);
+}
+
+/* 像素雲 */
+.pixel-cloud{
+position:absolute;
+background:var(–white);
+opacity:.12;
+}
+
+/* 敵方 HP 框 */
+.enemy-hpbox{
+position:absolute;top:8%;left:5%;
+background:var(–dark);
+padding:10px 14px;
+min-width:180px;
+border:4px solid var(–white);
+box-shadow:4px 4px 0 var(–black);
+}
+.hpbox-name{font-size:.55rem;color:var(–white);letter-spacing:.05em;margin-bottom:6px;}
+.hpbox-level{float:right;font-size:.45rem;color:var(–yellow);}
+.hp-label{font-size:.45rem;color:var(–yellow2);margin-bottom:4px;}
+.hp-bar-track{height:6px;background:#333;border:2px solid var(–black);}
+.hp-bar-fill{height:100%;transition:width 1s;background:var(–hp-green);}
+
+/* 玩家精靈 — 大頭貼 */
+.player-sprite{
+position:absolute;
+bottom:32%;left:8%;
+width:96px;height:96px;
+}
+.sprite-img{
+width:100%;height:100%;
+object-fit:cover;
+border:4px solid var(–white);
+image-rendering:pixelated;
+box-shadow:4px 4px 0 var(–black),-4px 4px 0 var(–black);
+animation:spriteFloat 2s ease-in-out infinite alternate;
+}
+@keyframes spriteFloat{
 from{transform:translateY(0);}
-to{transform:translateY(-4px);}
+to{transform:translateY(-8px);}
 }
 
-/* 圖鑑號碼 + 名字 */
-.dex-info-right{
-flex:1;padding-left:12px;
-display:flex;flex-direction:column;gap:6px;
-}
-.dex-number{font-size:.4rem;color:var(–screen-light);letter-spacing:.08em;}
-.dex-name-main{font-size:.75rem;color:var(–screen-bg);line-height:1.4;}
-.dex-name-sub{font-size:.38rem;color:var(–screen-light);}
-.dex-types{display:flex;gap:4px;margin-top:2px;}
-.dex-type{
-padding:3px 7px;font-size:.35rem;
-border:2px solid var(–screen-mid);
-color:var(–screen-bg);background:var(–screen-mid);
+/* 玩家 HP 框 */
+.player-hpbox{
+position:absolute;bottom:54%;right:5%;
+background:var(–dark);
+padding:10px 14px;min-width:200px;
+border:4px solid var(–white);
+box-shadow:4px 4px 0 var(–black);
 }
 
-/* HP 列 */
-.hp-section{
-padding:0 12px 12px;
+/* 對話框 */
+.dialog-box{
+position:relative;z-index:10;
+margin:0 12px;margin-top:auto;
+background:var(–white);
+border:4px solid var(–black);
+box-shadow:
+0 0 0 4px var(–black),
+4px 4px 0 8px rgba(0,0,0,.5);
+padding:16px 20px 14px;
+min-height:80px;
 }
-.hp-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
-.hp-label-px{font-size:.4rem;color:var(–screen-light);width:20px;}
-.hp-track{
-flex:1;height:8px;
-background:var(–screen-dark);
-border:2px solid var(–screen-mid);
-}
-.hp-bar{
-height:100%;
-background:repeating-linear-gradient(
-90deg,#4eff91 0px,#4eff91 5px,transparent 5px,transparent 7px
-);
-transition:width 1s steps(10);
-}
-.hp-bar.low{
-background:repeating-linear-gradient(
-90deg,#ff4444 0px,#ff4444 5px,transparent 5px,transparent 7px
-);
-}
-.hp-num{font-size:.38rem;color:var(–screen-bg);}
-.status-tag{
-font-size:.35rem;padding:2px 6px;
-border:2px solid #ff4444;color:#ff4444;
-animation:statusBlink .8s step-end infinite;
-display:inline-block;margin-top:2px;
-}
-@keyframes statusBlink{0%,100%{opacity:1;}50%{opacity:0;}}
-
-/* 對話文字框 */
-.dialog-area{
-background:var(–screen-bg);
-border-top:4px solid var(–screen-mid);
-padding:10px 12px;
-min-height:56px;position:relative;
-}
-.dialog-line{
-font-size:.45rem;color:var(–screen-dark);
-line-height:1.9;white-space:pre-wrap;
-}
-.dialog-cursor{
-display:inline-block;width:8px;height:10px;
-background:var(–screen-dark);
-animation:blink .6s step-end infinite;
-margin-left:2px;vertical-align:middle;
+.dialog-box::before{
+content:‘▶’;
+position:absolute;right:12px;bottom:10px;
+font-size:.5rem;color:var(–black);
+animation:blink .8s step-end infinite;
 }
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
-
-/* ════════════════════════
-折頁區（中間轉軸）
-════════════════════════ */
-/* ════════════════════════
-頁籤選擇器（圖鑑分頁）
-════════════════════════ */
-.tab-row{
-display:grid;grid-template-columns:repeat(4,1fr);
-gap:2px;padding:8px 12px 0;
-background:var(–dex-red);
+.dialog-text{
+font-size:.55rem;line-height:1.8;
+color:var(–black);letter-spacing:.02em;
 }
-.dex-tab{
-padding:8px 4px;
-background:var(–dex-dark);
-border:3px solid var(–dex-dark);
-color:rgba(255,255,255,.4);
-font-family:‘Press Start 2P’,monospace;font-size:.35rem;
-cursor:pointer;text-align:center;line-height:1.6;
+
+/* ══════════════════════
+AI 聊天 — 神奇寶貝對話框風格
+══════════════════════ */
+.chat-section{
+position:relative;z-index:5;
+padding:20px 12px;
+background:var(–black);
+}
+
+/* 模式選擇 — 技能選擇框 */
+.move-selector{
+display:grid;grid-template-columns:1fr 1fr;
+gap:3px;margin-bottom:16px;
+border:4px solid var(–black);
+box-shadow:4px 4px 0 rgba(0,0,0,.5);
+}
+.move-btn{
+padding:12px 8px;
+background:var(–dark);
+border:none;cursor:pointer;
+font-family:‘Press Start 2P’,monospace;
+font-size:.48rem;color:var(–white);
+display:flex;align-items:center;justify-content:center;gap:6px;
+border:2px solid var(–mid);
 transition:none;
-box-shadow:0 3px 0 rgba(0,0,0,.5);
+text-align:center;line-height:1.6;
 }
-.dex-tab.active{
-background:var(–inner-bg);color:var(–screen-dark);
-border-color:var(–dex-dark);
-box-shadow:none;transform:translateY(3px);
+.move-btn:hover{background:var(–mid);}
+.move-btn.active{
+background:var(–yellow);
+color:var(–black);
+border-color:var(–yellow2);
+box-shadow:inset 2px 2px 0 rgba(255,255,255,.3);
 }
-.dex-tab:hover:not(.active){background:#2a0a00;}
 
-/* ════════════════════════
-下半面板
-════════════════════════ */
-.dex-lower{
-flex:1;
-background:var(–inner-bg);
-border-top:4px solid var(–dex-dark);
-padding:12px;
+/* 聊天視窗 — 神奇寶貝訊息框 */
+.chat-window{
+background:var(–white);
+border:4px solid var(–black);
+box-shadow:4px 4px 0 var(–black);
+overflow:hidden;
+}
+.chat-header{
+background:var(–mid);
+padding:10px 14px;
+display:flex;align-items:center;gap:8px;
+border-bottom:4px solid var(–black);
+}
+.chat-header-icon{
+width:28px;height:28px;
+background:var(–yellow);
+border:3px solid var(–black);
+display:flex;align-items:center;justify-content:center;
+font-size:.9rem;
+box-shadow:2px 2px 0 var(–black);
+}
+.chat-header-name{font-size:.5rem;color:var(–white);letter-spacing:.05em;}
+.chat-header-status{
+margin-left:auto;font-size:.4rem;color:var(–hp-green);
+display:flex;align-items:center;gap:4px;
+}
+.status-px{width:6px;height:6px;background:var(–hp-green);animation:blink .8s step-end infinite;}
+
+.chat-messages{
+height:280px;overflow-y:auto;padding:12px;
 display:flex;flex-direction:column;gap:8px;
-min-height:0;
-}
-
-/* 各頁內容 */
-.dex-page{display:none;}
-.dex-page.active{display:flex;flex-direction:column;gap:8px;}
-
-/* ── DATA 頁 ── */
-.data-screen{
-background:var(–screen-dark);
-border:4px solid var(–dex-dark);
-box-shadow:inset 2px 2px 0 rgba(0,0,0,.4),3px 3px 0 var(–dex-dark);
-padding:12px;
-}
-.data-screen::after{
-content:’’;display:block;
-}
-.data-row{
-display:flex;gap:6px;margin-bottom:6px;
-border-bottom:1px solid var(–screen-mid);
-padding-bottom:6px;
-}
-.data-row:last-child{border-bottom:none;margin-bottom:0;}
-.data-key{font-size:.38rem;color:var(–screen-light);width:64px;flex-shrink:0;line-height:1.8;}
-.data-val{font-size:.4rem;color:var(–screen-bg);line-height:1.8;flex:1;}
-.data-val.noto{font-family:‘Noto Sans JP’,monospace;}
-
-/* ── CHAT 頁 ── */
-.chat-mode-row{
-display:grid;grid-template-columns:1fr 1fr;gap:3px;
-margin-bottom:6px;
-}
-.chat-mode-btn{
-padding:8px;background:var(–dex-dark);
-border:3px solid rgba(255,255,255,.1);
-color:rgba(255,255,255,.4);
-font-family:‘Press Start 2P’,monospace;font-size:.38rem;
-cursor:pointer;text-align:center;line-height:1.6;
-box-shadow:2px 2px 0 rgba(0,0,0,.4);
-}
-.chat-mode-btn.active{
-background:var(–btn-yellow);color:var(–dex-dark);
-border-color:var(–btn-yellow);
-}
-.chat-screen{
-background:var(–screen-dark);
-border:4px solid var(–dex-dark);
-box-shadow:inset 2px 2px 0 rgba(0,0,0,.4),3px 3px 0 var(–dex-dark);
-display:flex;flex-direction:column;
-height:220px;
-}
-.chat-msgs{
-flex:1;overflow-y:auto;padding:8px;
-display:flex;flex-direction:column;gap:6px;
+background:var(–white);
 scroll-behavior:smooth;
 }
-.chat-msgs::-webkit-scrollbar{width:4px;}
-.chat-msgs::-webkit-scrollbar-thumb{background:var(–screen-mid);}
-.msg{display:flex;gap:5px;animation:msgPop .1s steps(2) both;}
-@keyframes msgPop{from{opacity:0;}to{opacity:1;}}
+.chat-messages::-webkit-scrollbar{width:8px;}
+.chat-messages::-webkit-scrollbar-track{background:var(–white);border-left:2px solid var(–black);}
+.chat-messages::-webkit-scrollbar-thumb{background:var(–mid);border:2px solid var(–black);}
+
+.msg{display:flex;gap:6px;animation:msgPop .1s steps(2) both;}
+@keyframes msgPop{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
 .msg.user{flex-direction:row-reverse;}
-.msg-ic{width:20px;height:20px;flex-shrink:0;border:2px solid var(–screen-mid);display:flex;align-items:center;justify-content:center;font-size:.6rem;align-self:flex-end;}
-.msg.bot .msg-ic{background:var(–screen-mid);}
-.msg.user .msg-ic{background:var(–btn-yellow);}
-.msg-bub{max-width:80%;padding:5px 7px;border:2px solid var(–screen-mid);font-size:.38rem;line-height:1.8;}
-.msg.bot .msg-bub{background:var(–screen-mid);color:var(–screen-bg);font-family:‘Noto Sans JP’,monospace;}
-.msg.user .msg-bub{background:var(–btn-yellow);color:var(–dex-dark);font-family:‘Noto Sans JP’,monospace;}
-.typing-bub{display:flex;gap:4px;padding:6px 8px;background:var(–screen-mid);border:2px solid var(–screen-mid);}
-.tp{width:6px;height:6px;background:var(–screen-bg);animation:tp .8s step-end infinite;}
-.tp:nth-child(2){animation-delay:.27s;}.tp:nth-child(3){animation-delay:.54s;}
-@keyframes tp{0%,100%{opacity:1;}50%{opacity:0;}}
-.quick-row{padding:5px 6px;border-top:3px solid var(–dex-dark);display:flex;gap:4px;overflow-x:auto;flex-wrap:nowrap;background:rgba(0,0,0,.3);}
-.quick-row::-webkit-scrollbar{display:none;}
-.qbtn{flex-shrink:0;padding:4px 7px;background:var(–screen-dark);border:2px solid var(–screen-mid);color:var(–screen-light);font-family:‘Press Start 2P’,monospace;font-size:.32rem;cursor:pointer;white-space:nowrap;}
-.qbtn:hover{background:var(–screen-mid);}
-.chat-input-row{display:flex;border-top:3px solid var(–dex-dark);}
-.chat-inp{flex:1;padding:7px 8px;background:var(–screen-dark);border:none;outline:none;color:var(–screen-bg);font-family:‘Noto Sans JP’,monospace;font-size:.38rem;border-right:3px solid var(–dex-dark);}
-.chat-inp::placeholder{color:rgba(155,188,15,.3);}
-.chat-send{width:36px;background:var(–btn-yellow);border:none;cursor:pointer;color:var(–dex-dark);font-size:.8rem;font-family:‘Press Start 2P’,monospace;}
-.chat-send:disabled{background:var(–screen-mid);cursor:not-allowed;}
 
-/* ── DESTINY 頁 ── */
-.destiny-screen{
-background:var(–screen-dark);
-border:4px solid var(–dex-dark);
-box-shadow:inset 2px 2px 0 rgba(0,0,0,.4),3px 3px 0 var(–dex-dark);
-padding:10px;
+.msg-icon{
+width:24px;height:24px;flex-shrink:0;
+border:2px solid var(–black);
+display:flex;align-items:center;justify-content:center;
+font-size:.75rem;
+box-shadow:2px 2px 0 var(–black);
+align-self:flex-end;
 }
-.dest-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:2px solid var(–screen-mid);padding-bottom:6px;}
-.dest-label{font-size:.38rem;color:var(–btn-yellow);}
-.dest-date{font-size:.32rem;color:var(–screen-light);}
-.dest-emoji{font-size:1.8rem;text-align:center;display:block;margin:6px 0;filter:drop-shadow(0 0 6px rgba(155,188,15,.6));}
-.dest-msg{font-size:.38rem;color:var(–screen-bg);line-height:1.9;font-family:‘Noto Sans JP’,monospace;margin-bottom:10px;}
-.dest-bars{display:flex;flex-direction:column;gap:6px;}
-.dest-bar-row{display:flex;align-items:center;gap:6px;}
-.dest-bar-lbl{font-size:.32rem;color:var(–screen-light);width:50px;flex-shrink:0;}
-.dest-bar-track{flex:1;height:7px;background:var(–dex-dark);border:2px solid var(–screen-mid);}
-.dest-bar-fill{height:100%;background:repeating-linear-gradient(90deg,#4eff91 0,#4eff91 5px,transparent 5px,transparent 7px);width:0%;transition:width 1s steps(8);}
+.msg.bot .msg-icon{background:var(–blue);}
+.msg.user .msg-icon{background:var(–yellow);color:var(–black);}
 
-/* ── GPS 頁 ── */
-.gps-screen{
-background:var(–screen-dark);
-border:4px solid var(–dex-dark);
-box-shadow:inset 2px 2px 0 rgba(0,0,0,.4),3px 3px 0 var(–dex-dark);
-padding:10px;display:flex;flex-direction:column;gap:8px;
+.msg-bubble{
+max-width:78%;
+padding:8px 10px;
+font-size:.48rem;line-height:1.9;
+border:3px solid var(–black);
+box-shadow:3px 3px 0 var(–black);
 }
-.gps-radar{
-width:80px;height:80px;border-radius:50%;
-background:radial-gradient(circle,#003300,#001100);
-border:4px solid #00aa00;
-margin:0 auto;position:relative;
-box-shadow:0 0 12px rgba(0,200,0,.3);
+.msg.bot .msg-bubble{
+background:var(–dark);color:var(–white);
+border-radius:0;
 }
-.radar-line{
-position:absolute;top:50%;left:50%;
-width:50%;height:2px;
-background:linear-gradient(90deg,transparent,#00ff44);
-transform-origin:left center;
-animation:radarSpin 2s linear infinite;
-}
-@keyframes radarSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-.radar-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:#00ff44;box-shadow:0 0 6px #00ff44;}
-.radar-dot:nth-child(2){top:25%;left:60%;}
-.radar-dot:nth-child(3){top:60%;left:25%;animation:blink .6s step-end infinite;}
-.gps-text{font-size:.4rem;color:var(–screen-bg);line-height:1.9;font-family:‘Noto Sans JP’,monospace;text-align:center;}
-.gps-btn{
-width:100%;padding:10px;
-background:#00aa00;border:4px solid var(–dex-dark);
-color:#fff;font-family:‘Press Start 2P’,monospace;font-size:.42rem;
-cursor:pointer;box-shadow:3px 3px 0 var(–dex-dark);
-}
-.gps-btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(–dex-dark);}
-.call-btn{
-width:100%;padding:9px;
-background:var(–dex-red2);border:4px solid var(–dex-dark);
-color:#fff;font-family:‘Press Start 2P’,monospace;font-size:.42rem;
-cursor:pointer;text-decoration:none;
-display:flex;align-items:center;justify-content:center;
-box-shadow:3px 3px 0 var(–dex-dark);
-}
-.ig-btn{
-width:100%;padding:9px;
-background:linear-gradient(135deg,#833ab4,#e1306c);
-border:4px solid var(–dex-dark);
-color:#fff;font-family:‘Press Start 2P’,monospace;font-size:.42rem;
-cursor:pointer;text-decoration:none;
-display:flex;align-items:center;justify-content:center;
-box-shadow:3px 3px 0 var(–dex-dark);
+.msg.user .msg-bubble{
+background:var(–yellow);color:var(–black);
 }
 
-/* ════════════════════════
-方向鍵 + ABXY
-════════════════════════ */
-.controls{
-padding:12px 16px;
-background:var(–dex-red);
-border-top:4px solid var(–dex-dark);
-display:flex;justify-content:space-between;align-items:center;
+/* 打字 */
+.typing-bubble{
+background:var(–dark);color:var(–white);
+padding:10px 14px;border:3px solid var(–black);
+box-shadow:3px 3px 0 var(–black);
+display:flex;gap:6px;align-items:center;width:fit-content;
 }
-.dpad{
-width:80px;height:80px;
-position:relative;flex-shrink:0;
+.typing-px{width:8px;height:8px;background:var(–white);animation:typingPx .8s step-end infinite;}
+.typing-px:nth-child(2){animation-delay:.27s;}
+.typing-px:nth-child(3){animation-delay:.54s;}
+@keyframes typingPx{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* 快捷問題 */
+.quick-btns{
+padding:8px;background:var(–black);border-top:4px solid var(–black);
+display:flex;gap:4px;overflow-x:auto;flex-wrap:nowrap;
 }
-.dpad-h,.dpad-v{
-position:absolute;background:var(–dex-dark);border-radius:2px;
+.quick-btns::-webkit-scrollbar{display:none;}
+.quick-btn{
+flex-shrink:0;padding:6px 10px;
+background:var(–dark);border:3px solid var(–mid);
+color:var(–white);font-family:‘Press Start 2P’,monospace;font-size:.4rem;
+cursor:pointer;white-space:nowrap;transition:none;
+box-shadow:2px 2px 0 var(–black);
 }
-.dpad-h{width:100%;height:30%;top:35%;left:0;}
-.dpad-v{height:100%;width:30%;left:35%;top:0;}
-.dpad-center{
-position:absolute;width:30%;height:30%;top:35%;left:35%;
-background:#222;z-index:2;
+.quick-btn:hover{background:var(–mid);transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(–black);}
+
+/* 輸入列 */
+.chat-input-row{
+display:flex;border-top:4px solid var(–black);
 }
-.dpad-btn{
-position:absolute;width:30%;height:30%;
-display:flex;align-items:center;justify-content:center;
-font-size:.6rem;cursor:pointer;z-index:3;color:rgba(255,255,255,.5);
+.chat-input{
+flex:1;padding:10px 12px;
+background:var(–dark);border:none;outline:none;
+color:var(–white);font-family:‘Press Start 2P’,monospace;font-size:.48rem;
+border-right:4px solid var(–black);
+}
+.chat-input::placeholder{color:rgba(255,255,255,.3);}
+.chat-send{
+width:48px;padding:10px;
+background:var(–yellow);border:none;cursor:pointer;
+color:var(–black);font-size:1rem;
 font-family:‘Press Start 2P’,monospace;
+box-shadow:inset 2px 2px 0 rgba(255,255,255,.3);
+transition:none;
 }
-.dpad-up{top:0;left:35%;}
-.dpad-down{bottom:0;left:35%;}
-.dpad-left{top:35%;left:0;}
-.dpad-right{top:35%;right:0;}
-.dpad-btn:active{background:rgba(255,255,255,.1);}
+.chat-send:hover{background:var(–yellow2);}
+.chat-send:disabled{background:var(–mid);cursor:not-allowed;}
 
-/* START/SELECT */
-.mid-btns{display:flex;flex-direction:column;gap:6px;align-items:center;}
-.sys-btn{
-padding:5px 10px;background:var(–dex-dark);
-border:2px solid rgba(255,255,255,.15);
-color:rgba(255,255,255,.4);
-font-family:‘Press Start 2P’,monospace;font-size:.32rem;
-cursor:pointer;border-radius:99px;
-box-shadow:1px 1px 0 rgba(0,0,0,.5);
+/* ══════════════════════
+命運卡 — 神奇寶貝圖鑑風
+══════════════════════ */
+.dex-section{
+padding:20px 12px;
+background:linear-gradient(180deg,var(–black),var(–dark));
+position:relative;z-index:5;
 }
-.sys-btn:hover{background:#333;}
-.vol-display{font-size:.32rem;color:rgba(255,255,255,.35);text-align:center;margin-top:4px;}
+.dex-card{
+background:var(–mid);
+border:4px solid var(–black);
+box-shadow:4px 4px 0 var(–black);
+overflow:hidden;
+}
+.dex-header{
+background:var(–red);padding:10px 14px;
+border-bottom:4px solid var(–black);
+display:flex;align-items:center;justify-content:space-between;
+}
+.dex-title{font-size:.5rem;color:var(–white);letter-spacing:.05em;}
+.dex-date{font-size:.4rem;color:rgba(255,255,255,.7);}
+.dex-body{padding:16px;}
+.dex-bars{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.dex-bar-row{display:flex;align-items:center;gap:8px;}
+.dex-bar-label{font-size:.38rem;color:var(–yellow2);width:54px;flex-shrink:0;}
+.dex-bar-track{flex:1;height:8px;background:var(–black);border:2px solid var(–black);}
+.dex-bar-fill{
+height:100%;
+background:repeating-linear-gradient(90deg,var(–hp-green) 0px,var(–hp-green) 6px,transparent 6px,transparent 8px);
+width:0%;transition:width 1s steps(10);
+}
+.dex-bar-fill.mid{background:repeating-linear-gradient(90deg,var(–hp-yellow) 0px,var(–hp-yellow) 6px,transparent 6px,transparent 8px);}
+.dex-bar-fill.low{background:repeating-linear-gradient(90deg,var(–hp-red) 0px,var(–hp-red) 6px,transparent 6px,transparent 8px);}
+.dex-msg{
+background:var(–black);border:3px solid var(–white);
+padding:12px;font-size:.45rem;color:var(–white);line-height:1.9;
+box-shadow:inset 0 0 0 2px var(–dark);
+}
+.dex-msg-emoji{font-size:1.2rem;display:block;margin-bottom:6px;}
 
-/* AB ボタン */
-.ab-btns{
-display:grid;grid-template-columns:1fr 1fr;
-gap:6px;width:72px;
+/* ══════════════════════
+資訊區 — 神奇寶貝資料卡
+══════════════════════ */
+.info-section{padding:20px 12px 12px;background:var(–black);position:relative;z-index:5;}
+.poke-card{
+background:var(–dark);
+border:4px solid var(–black);
+box-shadow:4px 4px 0 var(–black);
+overflow:hidden;margin-bottom:12px;
 }
-.ab-btn{
-width:32px;height:32px;border-radius:50%;
-display:flex;align-items:center;justify-content:center;
-font-family:‘Press Start 2P’,monospace;font-size:.45rem;
-cursor:pointer;border:3px solid var(–dex-dark);
-box-shadow:0 4px 0 var(–dex-dark),2px 2px 0 rgba(255,255,255,.1);
-transition:none;color:#fff;font-weight:bold;
+.poke-card-header{
+background:var(–blue);padding:10px 14px;
+border-bottom:4px solid var(–black);
+font-size:.5rem;color:var(–white);
+display:flex;align-items:center;gap:8px;
 }
-.ab-btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(–dex-dark);}
-.btn-a{background:#cc2200;grid-column:2;}
-.btn-b{background:#1a44aa;grid-column:1;grid-row:1;}
-.btn-x{background:#cc8800;grid-column:1;grid-row:2;}
-.btn-y{background:#116611;grid-column:2;grid-row:2;}
+.poke-card-header::before{
+content:’’;width:12px;height:12px;
+background:var(–yellow);border:2px solid var(–black);
+display:inline-block;flex-shrink:0;
+}
+.poke-card-body{padding:14px;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+.stat-item{
+background:var(–black);padding:10px;
+border:2px solid var(–mid);
+}
+.stat-label{font-size:.38rem;color:var(–yellow2);margin-bottom:5px;}
+.stat-value{font-size:.45rem;color:var(–white);line-height:1.7;}
+.stat-full{
+background:var(–black);padding:10px;
+border:2px solid var(–mid);margin-top:3px;
+}
 
-/* ════════════════════════
-音效靜音鍵
-════════════════════════ */
-#mute-btn{
-position:fixed;bottom:16px;right:16px;z-index:500;
-width:40px;height:40px;
-background:var(–dex-dark);
-border:3px solid var(–btn-yellow);
-color:var(–btn-yellow);font-size:1rem;
-cursor:pointer;box-shadow:3px 3px 0 rgba(0,0,0,.6);
-display:flex;align-items:center;justify-content:center;
-font-family:‘Press Start 2P’,monospace;
+/* 按鈕 — 神奇寶貝風 */
+.poke-btn{
+width:100%;max-width:420px;
+display:flex;justify-content:center;align-items:center;gap:8px;
+padding:14px;margin-bottom:10px;
+background:var(–mid);
+border:4px solid var(–black);
+box-shadow:4px 4px 0 var(–black);
+color:var(–white);font-family:‘Press Start 2P’,monospace;font-size:.5rem;
+text-decoration:none;cursor:pointer;
+transition:none;
+image-rendering:pixelated;
 }
+.poke-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(–black);}
+.poke-btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(–black);}
+.poke-btn-red{background:var(–red);}
+.poke-btn-yellow{background:var(–yellow);color:var(–black);}
+.poke-btn-green{background:var(–green);}
+.poke-btn-ig{background:linear-gradient(135deg,#e1306c,#833ab4);}
+.btn-row{display:flex;gap:8px;max-width:420px;width:100%;}
 
-/* 掃描線全域 */
-body::after{
-content:’’;position:fixed;inset:0;pointer-events:none;z-index:9999;
-background:repeating-linear-gradient(
-0deg,transparent 0,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 4px
-);
+/* GPS 框 */
+.gps-box{
+background:var(–black);
+border:4px solid var(–green);
+box-shadow:4px 4px 0 var(–black),0 0 0 8px var(–black),0 0 0 10px var(–green);
+padding:16px;margin-bottom:16px;
+max-width:420px;width:100%;
 }
+.gps-label{font-size:.38rem;color:var(–green2);margin-bottom:8px;letter-spacing:.05em;}
+.gps-desc{font-size:.45rem;color:var(–white);line-height:1.8;margin-bottom:12px;}
+
+/* 走馬燈 */
+.marquee-wrap{
+background:var(–yellow);border-top:3px solid var(–black);border-bottom:3px solid var(–black);
+padding:8px 0;overflow:hidden;margin-bottom:16px;
+}
+.marquee-inner{
+display:flex;gap:48px;white-space:nowrap;
+animation:marquee 12s linear infinite;
+font-size:.45rem;color:var(–black);
+}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);};}
+
+/* 頁尾 */
+.footer{
+text-align:center;padding:20px 12px;
+background:var(–black);border-top:4px solid var(–dark);
+font-size:.38rem;color:rgba(255,255,255,.3);letter-spacing:.08em;
+position:relative;z-index:5;
+}
+.footer-logo{font-size:.5rem;color:var(–yellow);margin-bottom:6px;}
+
+/* 入場 */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .4s steps(4),transform .4s steps(4);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ── 跑馬燈 Noto Sans 用中日文 ── */
+.noto{font-family:‘Noto Sans JP’,‘Press Start 2P’,monospace;}
 </style>
 
 </head>
 <body>
 
-<div class="pokedex">
+<!-- 星空 -->
 
-  <!-- 頂燈區 -->
+<div class="starfield" id="starfield"></div>
 
-  <div class="dex-top">
-    <div class="big-light"></div>
-    <div class="small-lights">
-      <div class="sml sml-r"></div>
-      <div class="sml sml-y"></div>
-      <div class="sml sml-g"></div>
+<!-- 語言 -->
+
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('zh',this)">中</button>
+  <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+  <button class="lang-btn" onclick="setLang('ja',this)">日</button>
+</div>
+
+<!-- ══ 戰鬥畫面 ══ -->
+
+<div class="battle-screen">
+  <div class="battle-ground"></div>
+  <div class="enemy-platform"></div>
+  <div class="player-platform"></div>
+
+  <!-- 像素雲 -->
+
+  <div class="pixel-cloud" style="width:64px;height:16px;top:12%;left:15%;border-radius:0;"></div>
+  <div class="pixel-cloud" style="width:48px;height:16px;top:12%;left:17%;top:10%;border-radius:0;box-shadow:16px 0 0 var(--white), -16px 0 0 var(--white), 0 -8px 0 0 var(--white);opacity:.08;"></div>
+  <div class="pixel-cloud" style="width:80px;height:16px;top:8%;right:20%;opacity:.07;box-shadow:16px 0 0 var(--white),-16px 0 0 var(--white);"></div>
+
+  <!-- 敵方 HP（走失警告） -->
+
+  <div class="enemy-hpbox" id="warning-box">
+    <div class="hpbox-name">
+      <span id="hero-name-en">DERE</span>
+      <span class="hpbox-level" id="t-level">Lv.??</span>
     </div>
-    <div class="dex-top-title">GODIVANLIFE DEX</div>
+    <div class="hp-label">⚠ STATUS</div>
+    <div class="hp-bar-track"><div class="hp-bar-fill" id="hp-fill" style="width:30%;background:var(--hp-red);"></div></div>
+    <div style="font-size:.35rem;color:var(--red2);margin-top:4px;" id="t-status-msg"></div>
   </div>
 
-  <!-- 語言 -->
+  <!-- 玩家精靈 -->
 
-  <div class="lang-row">
-    <button class="lang-btn active" onclick="setLang('zh',this)">中文</button>
-    <button class="lang-btn" onclick="setLang('en',this)">ENG</button>
-    <button class="lang-btn" onclick="setLang('ja',this)">日本語</button>
+  <div class="player-sprite">
+    <img class="sprite-img" src="https://github.com/godivanlife-creator/dere20240316/blob/main/IMG_0832.jpg?raw=true" alt="得意 Dere" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\'font-size:3rem;line-height:96px;text-align:center\'>🐶</div>'">
   </div>
 
-  <!-- 主螢幕 -->
+  <!-- 玩家 HP -->
 
-  <div class="main-screen-wrap">
-    <div class="main-screen">
-
-```
-  <!-- 精靈區 -->
-  <div class="sprite-area">
-    <div class="sprite-frame">
-      <img src="https://github.com/godivanlife-creator/dere20240316/blob/main/IMG_0832.jpg?raw=true"
-        alt="得意 Dere"
-        onerror="this.style.fontSize='3rem';this.style.lineHeight='92px';this.style.textAlign='center';this.outerHTML='<div style=\'font-size:3rem;line-height:92px;text-align:center;width:100%\'>🐶</div>'">
+  <div class="player-hpbox">
+    <div class="hpbox-name">
+      <span id="t-pet-name"></span>
+      <span class="hpbox-level">Lv.MAX</span>
     </div>
-    <div class="dex-info-right">
-      <div class="dex-number">No.0428</div>
-      <div class="dex-name-main" id="dex-name">得意<br>DERE</div>
-      <div class="dex-name-sub" id="dex-species"></div>
-      <div class="dex-types">
-        <div class="dex-type" id="type1">NORMAL</div>
-        <div class="dex-type" id="type2">SPORTS</div>
+    <div class="hp-label">HP</div>
+    <div class="hp-bar-track"><div class="hp-bar-fill" style="width:100%;"></div></div>
+    <div style="font-size:.35rem;color:var(--yellow2);margin-top:4px;" id="t-hp-sub"></div>
+  </div>
+
+  <!-- 對話框 -->
+
+  <div class="dialog-box" id="dialog-box">
+    <div class="dialog-text" id="dialog-text"></div>
+  </div>
+</div>
+
+<!-- ══ 跑馬燈 ══ -->
+
+<div class="marquee-wrap">
+  <div class="marquee-inner" id="marquee"></div>
+</div>
+
+<!-- ══ AI 聊天 ══ -->
+
+<div class="chat-section">
+
+  <div class="move-selector">
+    <button class="move-btn active" id="tab-pet" onclick="switchMode('pet')">
+      🐶 <span id="tab-pet-label"></span>
+    </button>
+    <button class="move-btn" id="tab-expert" onclick="switchMode('expert')">
+      👩‍⚕️ <span id="tab-expert-label"></span>
+    </button>
+  </div>
+
+  <div class="chat-window">
+    <div class="chat-header">
+      <div class="chat-header-icon" id="chat-icon">🐶</div>
+      <div>
+        <div class="chat-header-name" id="chat-title"></div>
+        <div class="chat-header-name" style="color:rgba(255,255,255,.5);font-size:.38rem;" id="chat-subtitle"></div>
+      </div>
+      <div class="chat-header-status"><div class="status-px"></div><span id="status-text"></span></div>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="quick-btns" id="quick-btns"></div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chat-input" type="text" autocomplete="off" onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <button class="chat-send" id="send-btn" onclick="sendMsg()">▶</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ 命運圖鑑 ══ -->
+
+<div class="dex-section">
+  <div class="dex-card reveal">
+    <div class="dex-header">
+      <div class="dex-title" id="t-destiny-title">🔮 <span id="t-destiny-label"></span></div>
+      <div class="dex-date" id="destiny-date"></div>
+    </div>
+    <div class="dex-body">
+      <div class="dex-bars" id="destiny-bars"></div>
+      <div class="dex-msg">
+        <span class="dex-msg-emoji" id="destiny-emoji"></span>
+        <span id="destiny-msg"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 資訊卡 ══ -->
+
+<div class="info-section">
+
+  <div class="poke-card reveal">
+    <div class="poke-card-header" id="t-info-header"></div>
+    <div class="poke-card-body">
+      <div class="stat-grid">
+        <div class="stat-item">
+          <div class="stat-label" id="t-breed-label"></div>
+          <div class="stat-value noto" id="t-breed"></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label" id="t-personality-label"></div>
+          <div class="stat-value noto" id="t-personality"></div>
+        </div>
+      </div>
+      <div class="stat-full">
+        <div class="stat-label" id="t-about-label"></div>
+        <div class="stat-value noto" id="t-about"></div>
+      </div>
+      <div class="stat-full" style="border-color:var(--yellow);margin-top:3px;">
+        <div class="stat-value noto" id="t-skill" style="color:var(--yellow2);"></div>
       </div>
     </div>
   </div>
 
-  <!-- HP 列 -->
-  <div class="hp-section">
-    <div class="hp-row">
-      <div class="hp-label-px">HP</div>
-      <div class="hp-track"><div class="hp-bar low" id="hp-bar" style="width:28%;"></div></div>
-      <div class="hp-num">28/100</div>
-    </div>
-    <div class="status-tag" id="status-tag"></div>
-  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:0;">
+    <a class="poke-btn poke-btn-red reveal" href="tel:0988313193" id="t-call"></a>
 
-  <!-- 對話框 -->
-  <div class="dialog-area">
-    <div class="dialog-line" id="dialog-text"></div>
-    <span class="dialog-cursor"></span>
-  </div>
-
+```
+<div class="gps-box reveal">
+  <div class="gps-label" id="t-gps-label">📡 GPS TRACKER</div>
+  <div class="gps-desc noto" id="t-gps-desc"></div>
+  <button class="poke-btn poke-btn-green" id="gps-btn" onclick="sendGPS()" style="max-width:100%;margin-bottom:0;"></button>
 </div>
+
+<a class="poke-btn poke-btn-ig reveal" href="https://www.instagram.com/dere20240316/" target="_blank" id="t-ig"></a>
 ```
 
   </div>
 
-  <!-- 折頁 -->
-
-  <div class="hinge"></div>
-
-  <!-- 頁籤 -->
-
-  <div class="tab-row">
-    <button class="dex-tab active" onclick="switchTab('data',this)" id="tab-data"></button>
-    <button class="dex-tab" onclick="switchTab('chat',this)" id="tab-chat"></button>
-    <button class="dex-tab" onclick="switchTab('destiny',this)" id="tab-destiny"></button>
-    <button class="dex-tab" onclick="switchTab('gps',this)" id="tab-gps"></button>
-  </div>
-
-  <!-- 下半面板 -->
-
-  <div class="dex-lower">
-
-```
-<!-- DATA 頁 -->
-<div class="dex-page active" id="page-data">
-  <div class="data-screen">
-    <div class="data-row"><div class="data-key" id="dk1"></div><div class="data-val noto" id="dv1"></div></div>
-    <div class="data-row"><div class="data-key" id="dk2"></div><div class="data-val noto" id="dv2"></div></div>
-    <div class="data-row"><div class="data-key" id="dk3"></div><div class="data-val noto" id="dv3"></div></div>
-    <div class="data-row"><div class="data-key" id="dk4"></div><div class="data-val noto" id="dv4"></div></div>
-    <div class="data-row"><div class="data-key" id="dk5"></div><div class="data-val noto" id="dv5" style="color:var(--btn-yellow)"></div></div>
-  </div>
 </div>
 
-<!-- CHAT 頁 -->
-<div class="dex-page" id="page-chat">
-  <div class="chat-mode-row">
-    <button class="chat-mode-btn active" id="cm-pet" onclick="switchMode('pet')">🐶 <span id="cm-pet-label"></span></button>
-    <button class="chat-mode-btn" id="cm-exp" onclick="switchMode('expert')">👩‍⚕️ <span id="cm-exp-label"></span></button>
-  </div>
-  <div class="chat-screen">
-    <div class="chat-msgs" id="chat-msgs"></div>
-    <div class="quick-row" id="quick-row"></div>
-    <div class="chat-input-row">
-      <input class="chat-inp" id="chat-inp" type="text" autocomplete="off" onkeydown="if(event.key==='Enter')sendMsg()"/>
-      <button class="chat-send" id="send-btn" onclick="sendMsg()">▶</button>
-    </div>
-  </div>
+<div class="footer">
+  <div class="footer-logo">GODIVANLIFE</div>
+  <div>NFC SMART PET TAG SYSTEM v1.0</div>
+  <div style="margin-top:4px;">© 2025 ALL RIGHTS RESERVED</div>
 </div>
-
-<!-- DESTINY 頁 -->
-<div class="dex-page" id="page-destiny">
-  <div class="destiny-screen">
-    <div class="dest-header">
-      <div class="dest-label" id="dest-label"></div>
-      <div class="dest-date" id="dest-date"></div>
-    </div>
-    <span class="dest-emoji" id="dest-emoji"></span>
-    <div class="dest-msg noto" id="dest-msg"></div>
-    <div class="dest-bars" id="dest-bars"></div>
-  </div>
-</div>
-
-<!-- GPS 頁 -->
-<div class="dex-page" id="page-gps">
-  <div class="gps-screen">
-    <div class="gps-radar">
-      <div class="radar-line"></div>
-      <div class="radar-dot"></div>
-      <div class="radar-dot"></div>
-      <div class="radar-dot"></div>
-    </div>
-    <div class="gps-text noto" id="gps-text"></div>
-    <button class="gps-btn" id="gps-btn" onclick="sendGPS()"></button>
-    <a class="call-btn" href="tel:0988313193" id="call-btn"></a>
-    <a class="ig-btn" href="https://www.instagram.com/dere20240316/" target="_blank" id="ig-btn"></a>
-  </div>
-</div>
-```
-
-  </div>
-
-  <!-- 實體按鍵區 -->
-
-  <div class="controls">
-    <div class="dpad">
-      <div class="dpad-h"></div>
-      <div class="dpad-v"></div>
-      <div class="dpad-center"></div>
-      <div class="dpad-btn dpad-up" onclick="dpadNav(-1)">▲</div>
-      <div class="dpad-btn dpad-down" onclick="dpadNav(1)">▼</div>
-      <div class="dpad-btn dpad-left" onclick="dpadTab(-1)">◀</div>
-      <div class="dpad-btn dpad-right" onclick="dpadTab(1)">▶</div>
-    </div>
-    <div class="mid-btns">
-      <button class="sys-btn" onclick="switchTabByName('data')">SELECT</button>
-      <button class="sys-btn" onclick="switchTabByName('chat')">START</button>
-      <div class="vol-display" id="vol-disp">♪ ON</div>
-    </div>
-    <div class="ab-btns">
-      <div class="ab-btn btn-b" onclick="dpadTab(-1)">B</div>
-      <div class="ab-btn btn-a" onclick="dpadTab(1)">A</div>
-      <div class="ab-btn btn-x" onclick="switchTabByName('destiny')">X</div>
-      <div class="ab-btn btn-y" onclick="switchTabByName('gps')">Y</div>
-    </div>
-  </div>
-
-</div>
-
-<!-- 靜音鍵 -->
-
-<button id="mute-btn" onclick="toggleMuteUI()">🔊</button>
 
 <script>
-/* ════════════════════════════════
+/* ══════════════════════════════
    設定
-════════════════════════════════ */
-const PET={
-  nameZh:'得意',nameEn:'Dere',
-  breed_en:'Jack Russell Terrier',
-  personality_en:'Energetic, sporty, loves soccer and basketball',
-  special_en:'Can dribble a ball with his head, returns it to owner',
-  phone:'0988313193',gps:'0988313193',
-  ig:'https://www.instagram.com/dere20240316/',
+══════════════════════════════ */
+const PET = {
+  nameZh:"得意", nameEn:"Dere",
+  breed_en:"Jack Russell Terrier",
+  personality_en:"Energetic, sporty, loves soccer and basketball",
+  special_en:"Can dribble a ball with his head, returns it to owner",
+  phone:"0988313193", gps:"0988313193",
+  ig:"https://www.instagram.com/dere20240316/",
 };
 
-/* ════════════════════════════════
+/* ══════════════════════════════
    多語系
-════════════════════════════════ */
+══════════════════════════════ */
 const UI={
   zh:{
-    species:'運動犬',type1:'一般',type2:'運動',
-    statusTag:'▼ 走失中 ▼',
-    dialog:'野生的【得意】出現了！\n牠似乎迷路了...',
-    tabs:['資料','對話','命運','緊急'],
-    dk:['品種','個性','特徵','技能','絕招'],
-    dv:['傑克羅素㹴','活潑・運動狂','愛球・愛撒嬌','頭部運球術','把球送回主人！'],
-    cmPet:'跟得意說話',cmExp:'寵物圖鑑',
-    destLabel:'今日命運',
-    bars:['撿食運','玩球能量','散步指數','撒嬌指數'],
-    gpsText:'發現得意了嗎？\n點擊下方按鈕\n把位置傳給主人！',
-    gpsBtn:'📡 發送 GPS 位置',gpsLoading:'定位中...',gpsError:'定位失敗',
-    callBtn:'📞 撥打主人電話',
-    igBtn:'📸 IG 日常紀錄',
-    inputPh:['跟得意說話...','查詢寵物資訊...'],
-    quick:[
-      ['你今天心情好嗎？','你最喜歡什麼？','你想吃什麼？','你喜歡我嗎？'],
-      ['傑克羅素怎麼訓練？','需要多少運動？','發現走失狗怎辦？','牠受傷了怎辦？']
-    ],
-    greet:[
-      '汪汪！！我是得意！\n你好呀～\n今天超想玩球！🐾',
-      '您好！GodiVanLife 圖鑑 AI！\n請問有什麼可以幫您？\n走失緊急請按 Y 鍵！'
-    ],
+    statusMsg:"走失中！請幫忙！",hpSub:"球技MAX · 尋找中",
+    petName:"得意 Dere",level:"Lv.3",
+    dialogIntro:"野生的【得意】出現了！\n牠似乎迷路了...",
+    tabPet:"跟得意說話",tabExpert:"寵物圖鑑",
+    chatTitlePet:"得意 DERE",chatSubPet:"汪汪！我在這裡！",
+    chatTitleExpert:"寵物圖鑑",chatSubExpert:"GodiVanLife AI",
+    statusOnline:"ONLINE",
+    inputPet:"跟得意說話...",inputExpert:"查詢寵物資料...",
+    destinyLabel:"今日運勢",
+    bars:["撿食運","玩球能量","散步指數","撒嬌指數"],
+    infoHeader:"TRAINER INFO — 得意 DERE",
+    breedLabel:"SPECIES",breed:"傑克羅素㹴",
+    personalityLabel:"TYPE",personality:"活潑・運動",
+    aboutLabel:"ABILITY",about:"超愛足球籃球 🏀 能用頭運球，還會把球送回主人！",
+    skill:"🏆 SPECIAL MOVE：頭部控球術",
+    call:"📞 CALL TRAINER",
+    gpsLabel:"📡 GPS TRACKER",
+    gpsDesc:"發現得意了嗎？點下方按鈕，把位置發給主人！",
+    gpsBtn:"📍 SEND LOCATION",
+    gpsLoading:"LOCATING...",gpsError:"定位失敗",
+    ig:"📸 IG DAILY LOG",
+    quickPet:["你今天心情怎樣？","你最喜歡做什麼？","你想吃什麼？","你喜歡我嗎？"],
+    quickExpert:["傑克羅素怎麼訓練？","需要多少運動量？","發現走失狗怎麼辦？","牠看起來受傷了"],
+    greetPet:"汪汪！！我是得意！你好呀～\n我今天超想玩球的！\n你是來找我主人的嗎？🐾",
+    greetExpert:"您好！我是 GodiVanLife 寵物圖鑑 AI！\n關於得意的品種、照護、或走失緊急處理，\n都可以問我！",
+    marquee:"⚽ 得意 DERE · 傑克羅素㹴 · 頭部控球術 · GodiVanLife NFC 智慧吊牌 · 掃一掃認識我 · ",
     destinies:[
-      {emoji:'⚽',msg:'今天是球技大爆發日！帶我出去踢球吧！'},
-      {emoji:'🍗',msg:'肚子咕嚕咕嚕叫～今天是撿食日！'},
-      {emoji:'😴',msg:'今天想曬太陽打盹，去公園就好！'},
-      {emoji:'🏆',msg:'今天能量滿點！要向每隻狗炫耀頭球！'},
-      {emoji:'🌧️',msg:'今天黏人模式開啟，多抱抱我！'},
-      {emoji:'🚀',msg:'今天想快跑！帶我去最長的步道！'},
-      {emoji:'🌟',msg:'今天特別閃亮，走路很吸睛！'},
-      {emoji:'🍀',msg:'幸運日！今天散步可能有驚喜！'},
+      {emoji:"⚽",msg:"今天是球技大爆發日！帶我出去踢球吧！"},
+      {emoji:"🍗",msg:"肚子咕嚕咕嚕叫～今天什麼都想吃！"},
+      {emoji:"😴",msg:"今天想曬太陽打盹，帶我去公園就好！"},
+      {emoji:"🏆",msg:"今天能量滿點！要向每隻狗炫耀我的頭球！"},
+      {emoji:"🌧️",msg:"今天黏人模式開啟，多抱抱我！"},
+      {emoji:"🚀",msg:"今天想快跑！帶我去最長的步道！"},
+      {emoji:"🌟",msg:"今天特別閃亮，走路一定很吸睛！"},
+      {emoji:"🍀",msg:"幸運日！今天散步可能有驚喜！"},
     ],
   },
   en:{
-    species:'Sports Dog',type1:'NORMAL',type2:'SPORTS',
-    statusTag:'▼ LOST ▼',
-    dialog:'Wild [DERE] appeared!\nSeems to be lost...',
-    tabs:['DATA','CHAT','FATE','SOS'],
-    dk:['SPECIES','TYPE','TRAIT','SKILL','MOVE'],
-    dv:['Jack Russell','Energetic・Sporty','Loves ball・Cuddly','Head Dribble','Returns ball to owner!'],
-    cmPet:'Talk to Dere',cmExp:'Pet Dex',
-    destLabel:"TODAY'S FATE",
-    bars:['Snack','Ball','Walk','Cuddle'],
-    gpsText:"Found Dere?\nTap below to send\nyour location!",
-    gpsBtn:'📡 SEND GPS LOCATION',gpsLoading:'LOCATING...',gpsError:'Location failed',
-    callBtn:"📞 CALL OWNER",
-    igBtn:'📸 IG DAILY LOG',
-    inputPh:['Talk to Dere...','Ask pet questions...'],
-    quick:[
-      ["How are you feeling?","What's your fav thing?","Are you hungry?","Do you like me?"],
-      ["How to train a JRT?","How much exercise?","Found a lost dog?","Dog looks injured?"]
-    ],
-    greet:[
-      'WOOF WOOF!! I\'m Dere!\nHi there~\nI wanna play ball today! 🐾',
-      'Hello! GodiVanLife Dex AI!\nHow can I help you?\nFor emergency, press Y!'
-    ],
+    statusMsg:"LOST! Please help!",hpSub:"Ball skill MAX · Searching",
+    petName:"Dere",level:"Lv.3",
+    dialogIntro:"Wild [DERE] appeared!\nSeems to be lost...",
+    tabPet:"Talk to Dere",tabExpert:"Pokédex",
+    chatTitlePet:"DERE",chatSubPet:"Woof woof! I'm here!",
+    chatTitleExpert:"PET DEX",chatSubExpert:"GodiVanLife AI",
+    statusOnline:"ONLINE",
+    inputPet:"Talk to Dere...",inputExpert:"Search pet data...",
+    destinyLabel:"TODAY'S DESTINY",
+    bars:["Snack Fortune","Ball Energy","Walk Vibes","Cuddle Level"],
+    infoHeader:"TRAINER INFO — DERE",
+    breedLabel:"SPECIES",breed:"Jack Russell Terrier",
+    personalityLabel:"TYPE",personality:"Energetic · Sports",
+    aboutLabel:"ABILITY",about:"Obsessed with soccer & basketball 🏀 Can header the ball and return it!",
+    skill:"🏆 SPECIAL MOVE: HEAD DRIBBLE",
+    call:"📞 CALL TRAINER",
+    gpsLabel:"📡 GPS TRACKER",
+    gpsDesc:"Found Dere? Tap below to send your location to the owner!",
+    gpsBtn:"📍 SEND LOCATION",
+    gpsLoading:"LOCATING...",gpsError:"Location failed",
+    ig:"📸 IG DAILY LOG",
+    quickPet:["How are you feeling?","What do you love most?","Are you hungry?","Do you like me?"],
+    quickExpert:["How to train a JRT?","How much exercise needed?","Found a lost dog, what now?","The dog looks injured"],
+    greetPet:"WOOF WOOF!! I'm Dere!\nI really wanna play ball today!\nAre you here to find my owner? 🐾",
+    greetExpert:"Hello! I'm the GodiVanLife Pet Dex AI!\nAsk me anything about Dere's breed,\ncare tips, or lost pet emergencies!",
+    marquee:"⚽ DERE · JACK RUSSELL TERRIER · HEAD DRIBBLE MASTER · GodiVanLife NFC PET TAG · TAP TO MEET ME · ",
     destinies:[
-      {emoji:'⚽',msg:"Big ball day! Take me out — I'll header one in!"},
-      {emoji:'🍗',msg:'Tummy rumbling~ Scavenger mode activated!'},
-      {emoji:'😴',msg:'Lazy mode ON. Park + sunshine = perfect day.'},
-      {emoji:'🏆',msg:'MAX ENERGY! Must show off heading skills!'},
-      {emoji:'🌧️',msg:'Clingy mode activated. Extra hugs required!'},
-      {emoji:'🚀',msg:'Running energy FULL. Need the longest trail!'},
-      {emoji:'🌟',msg:'Extra shiny today! All eyes on me!'},
-      {emoji:'🍀',msg:'Lucky day! Something good will happen!'},
+      {emoji:"⚽",msg:"Big ball day! Take me out — I'll header one in!"},
+      {emoji:"🍗",msg:"Tummy rumbling~ Scavenger mode activated!"},
+      {emoji:"😴",msg:"Lazy mode ON. Park + sunshine = perfect day."},
+      {emoji:"🏆",msg:"MAX ENERGY! Must show off heading skills today!"},
+      {emoji:"🌧️",msg:"Clingy mode activated. Extra hugs required!"},
+      {emoji:"🚀",msg:"Running energy FULL. Need the longest trail!"},
+      {emoji:"🌟",msg:"Extra shiny today! All eyes on me!"},
+      {emoji:"🍀",msg:"Lucky day! Something good will happen on the walk!"},
     ],
   },
   ja:{
-    species:'スポーツ犬',type1:'ノーマル',type2:'スポーツ',
-    statusTag:'▼ 迷子中 ▼',
-    dialog:'野生の【デレ】が現れた！\n迷子になったみたい...',
-    tabs:['データ','トーク','運勢','緊急'],
-    dk:['しゅるい','タイプ','とくちょう','わざ','とくわざ'],
-    dv:['JRテリア','元気・スポーツ','ボール好き・甘えん坊','頭部ドリブル術','ボールを飼い主に返す！'],
-    cmPet:'デレと話す',cmExp:'ペット図鑑',
-    destLabel:'今日の運勢',
-    bars:['拾い食い','ボール','散歩','甘え'],
-    gpsText:'デレを見つけた？\n下のボタンで\n位置情報を送って！',
-    gpsBtn:'📡 GPS位置を送る',gpsLoading:'測位中...',gpsError:'失敗しました',
-    callBtn:'📞 飼い主に電話',
-    igBtn:'📸 IG日常記録',
-    inputPh:['デレに話しかける...','ペット情報を検索...'],
-    quick:[
-      ['今日の気分は？','何が好き？','お腹すいてる？','私のこと好き？'],
-      ['JRTのしつけ方？','必要な運動量は？','迷子の犬を見つけた','怪我してるみたい']
-    ],
-    greet:[
-      'ワンワン！！デレだよ！\nこんにちは～\n今日はボールで遊びたい！🐾',
-      'こんにちは！GodiVanLife図鑑AI！\nなんでもどうぞ！\n緊急はYボタンを押して！'
-    ],
+    statusMsg:"迷子です！助けて！",hpSub:"ボール技MAX・捜索中",
+    petName:"デレ",level:"Lv.3",
+    dialogIntro:"野生の【デレ】が現れた！\n迷子になったみたい...",
+    tabPet:"デレと話す",tabExpert:"ポケモン図鑑",
+    chatTitlePet:"デレ",chatSubPet:"ワンワン！ここにいるよ！",
+    chatTitleExpert:"ペット図鑑",chatSubExpert:"GodiVanLife AI",
+    statusOnline:"オンライン",
+    inputPet:"デレに話しかける...",inputExpert:"ペット情報を検索...",
+    destinyLabel:"今日の運勢",
+    bars:["拾い食い運","ボール元気","散歩指数","甘えん坊度"],
+    infoHeader:"トレーナー情報 — デレ",
+    breedLabel:"しゅるい",breed:"ジャック・ラッセル・テリア",
+    personalityLabel:"タイプ",personality:"元気・スポーツ",
+    aboutLabel:"とくせい",about:"サッカーとバスケが大好き 🏀 頭でドリブルしてボールを返せる！",
+    skill:"🏆 とくわざ：頭部ドリブル術",
+    call:"📞 トレーナーに電話",
+    gpsLabel:"📡 GPS トラッカー",
+    gpsDesc:"デレを見つけたら、下のボタンで位置情報を送ってください！",
+    gpsBtn:"📍 位置を送る",
+    gpsLoading:"測位中...",gpsError:"失敗しました",
+    ig:"📸 IG 日常記録",
+    quickPet:["今日の気分は？","何が好き？","お腹すいてる？","私のこと好き？"],
+    quickExpert:["JRTのしつけ方は？","必要な運動量は？","迷子の犬を見つけた","怪我してるみたい"],
+    greetPet:"ワンワン！！デレだよ！\n今日はボールで遊びたいな！\n飼い主さんを探してるの？🐾",
+    greetExpert:"こんにちは！GodiVanLifeペット図鑑AIです！\n品種知識、ケア、迷子の緊急対応など\nなんでも聞いてください！",
+    marquee:"⚽ デレ · ジャック・ラッセル・テリア · 頭部ドリブル術 · GodiVanLife NFC タグ · タップして会いに来て · ",
     destinies:[
-      {emoji:'⚽',msg:'今日はボール技術が爆発する日！外に連れ出して！'},
-      {emoji:'🍗',msg:'お腹がグーグー～今日は拾い食いモード全開！'},
-      {emoji:'😴',msg:'のんびりモード。公園でお昼寝するだけでいい！'},
-      {emoji:'🏆',msg:'エネルギー全開！全犬にヘディング自慢する！'},
-      {emoji:'🌧️',msg:'甘えたいモード発動。いっぱい抱っこして！'},
-      {emoji:'🚀',msg:'全力疾走したい！一番長いコースへ！'},
-      {emoji:'🌟',msg:'今日は特別輝いてる！みんなの視線を独占！'},
-      {emoji:'🍀',msg:'ラッキーデー！散歩で何かいいことあるかも！'},
+      {emoji:"⚽",msg:"今日はボール技術が爆発する日！外に連れ出して！"},
+      {emoji:"🍗",msg:"お腹がグーグー～今日は拾い食いモード全開！"},
+      {emoji:"😴",msg:"のんびりモード。公園でお昼寝するだけでいい！"},
+      {emoji:"🏆",msg:"エネルギー全開！全犬にヘディング自慢する！"},
+      {emoji:"🌧️",msg:"甘えたいモード発動。いっぱい抱っこして！"},
+      {emoji:"🚀",msg:"全力疾走したい！一番長いコースへ！"},
+      {emoji:"🌟",msg:"今日は特別輝いてる！みんなの視線を独占！"},
+      {emoji:"🍀",msg:"ラッキーデー！散歩で何かいいことあるかも！"},
     ],
   }
 };
 
-/* ════════════════════════════════
-   狀態
-════════════════════════════════ */
-let lang='zh', mode='pet', isThinking=false, chatHistory=[];
-let todayDestiny, todayBars;
-const TABS=['data','chat','destiny','gps'];
-let currentTabIdx=0;
+/* ══════════════════════════════
+   星空生成
+══════════════════════════════ */
+(function makeStars(){
+  const sf=document.getElementById('starfield');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=[2,2,2,4,4,6][Math.floor(Math.random()*6)];
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${1+Math.random()*3}s;animation-delay:${Math.random()*3}s;`;
+    sf.appendChild(s);
+  }
+})();
 
-function seedRandom(s){return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646;};}
+/* ══════════════════════════════
+   日期種子亂數
+══════════════════════════════ */
+function seedRandom(seed){let s=seed;return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646;};}
 function getTodaySeed(){const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();}
-
+let todayDestiny,todayBars;
 function initToday(){
   const rng=seedRandom(getTodaySeed());
   const t=UI[lang];
   todayDestiny=t.destinies[Math.floor(rng()*t.destinies.length)];
-  todayBars=[Math.floor(rng()*50)+50,Math.floor(rng()*50)+50,Math.floor(rng()*50)+50,Math.floor(rng()*50)+50];
+  todayBars=[Math.floor(rng()*55)+45,Math.floor(rng()*55)+45,Math.floor(rng()*55)+45,Math.floor(rng()*55)+45];
 }
 
-/* ════════════════════════════════
-   渲染
-════════════════════════════════ */
+/* ══════════════════════════════
+   狀態
+══════════════════════════════ */
+let lang='zh';
+let mode='pet';
+let isThinking=false;
+let chatHistory=[];
+
+/* ══════════════════════════════
+   UI 渲染
+══════════════════════════════ */
 function applyLang(){
   initToday();
   const t=UI[lang];
-  // 主螢幕
-  document.getElementById('dex-species').innerText=t.species;
-  document.getElementById('type1').innerText=t.type1;
-  document.getElementById('type2').innerText=t.type2;
-  document.getElementById('status-tag').innerText=t.statusTag;
-  typeDialog(t.dialog);
-  // 頁籤
-  ['data','chat','destiny','gps'].forEach((id,i)=>{
-    document.getElementById('tab-'+id).innerText=t.tabs[i];
-  });
-  // DATA
-  t.dk.forEach((k,i)=>{document.getElementById('dk'+(i+1)).innerText=k;});
-  t.dv.forEach((v,i)=>{document.getElementById('dv'+(i+1)).innerText=v;});
-  // CHAT
-  document.getElementById('cm-pet-label').innerText=t.cmPet;
-  document.getElementById('cm-exp-label').innerText=t.cmExp;
-  document.getElementById('chat-inp').placeholder=t.inputPh[mode==='pet'?0:1];
-  renderQuick();
-  // DESTINY
+  // Battle screen
+  document.getElementById('t-status-msg').innerText=t.statusMsg;
+  document.getElementById('t-hp-sub').innerText=t.hpSub;
+  document.getElementById('t-pet-name').innerText=t.petName;
+  document.getElementById('t-level').innerText=t.level;
+  // 打字機效果對話框
+  typeDialog(t.dialogIntro);
+  // 跑馬燈
+  const m=document.getElementById('marquee');
+  m.innerHTML=(t.marquee+t.marquee).split('·').map(s=>`<span>${s} · </span>`).join('');
+  // 語言切換後聊天
+  updateChatUI();
+  // 命運
   const now=new Date();
-  document.getElementById('dest-label').innerText=t.destLabel;
-  document.getElementById('dest-date').innerText=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
-  document.getElementById('dest-emoji').innerText=todayDestiny.emoji;
-  document.getElementById('dest-msg').innerText=todayDestiny.msg;
-  const barsEl=document.getElementById('dest-bars');
+  document.getElementById('destiny-date').innerText=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+  document.getElementById('t-destiny-label').innerText=t.destinyLabel;
+  document.getElementById('destiny-emoji').innerText=todayDestiny.emoji;
+  document.getElementById('destiny-msg').innerText=todayDestiny.msg;
+  // bars
+  const barsEl=document.getElementById('destiny-bars');
   barsEl.innerHTML='';
-  t.bars.forEach((lbl,i)=>{
-    barsEl.innerHTML+=`<div class="dest-bar-row"><div class="dest-bar-lbl">${lbl}</div><div class="dest-bar-track"><div class="dest-bar-fill" id="dbar${i}"></div></div></div>`;
+  t.bars.forEach((label,i)=>{
+    const pct=todayBars[i];
+    const cls=pct>=70?'':'pct>=40?\'mid\':\'low\'';
+    barsEl.innerHTML+=`<div class="dex-bar-row"><div class="dex-bar-label">${label}</div><div class="dex-bar-track"><div class="dex-bar-fill${pct<40?' low':pct<70?' mid':''}" id="bar${i}"></div></div></div>`;
   });
-  setTimeout(()=>todayBars.forEach((v,i)=>{const el=document.getElementById('dbar'+i);if(el)el.style.width=v+'%';}),300);
-  // GPS
-  document.getElementById('gps-text').innerText=t.gpsText;
+  setTimeout(()=>todayBars.forEach((v,i)=>{const el=document.getElementById('bar'+i);if(el)el.style.width=v+'%';}),500);
+  // 資訊
+  document.getElementById('t-info-header').innerText=t.infoHeader;
+  document.getElementById('t-breed-label').innerText=t.breedLabel;
+  document.getElementById('t-breed').innerText=t.breed;
+  document.getElementById('t-personality-label').innerText=t.personalityLabel;
+  document.getElementById('t-personality').innerText=t.personality;
+  document.getElementById('t-about-label').innerText=t.aboutLabel;
+  document.getElementById('t-about').innerText=t.about;
+  document.getElementById('t-skill').innerText=t.skill;
+  document.getElementById('t-call').innerText=t.call;
+  document.getElementById('t-gps-label').innerText=t.gpsLabel;
+  document.getElementById('t-gps-desc').innerText=t.gpsDesc;
   document.getElementById('gps-btn').innerText=t.gpsBtn;
-  document.getElementById('call-btn').innerText=t.callBtn;
-  document.getElementById('ig-btn').innerText=t.igBtn;
+  document.getElementById('t-ig').innerText=t.ig;
+}
+
+function typeDialog(text){
+  const el=document.getElementById('dialog-text');
+  el.innerText='';
+  const lines=text.split('\n');
+  let i=0,li=0,chars=lines[0].split('');
+  function next(){
+    if(li>=lines.length){return;}
+    if(i<chars.length){
+      el.innerText+=chars[i++];
+      setTimeout(next,40);
+    } else if(li<lines.length-1){
+      el.innerText+='\n';li++;chars=lines[li].split('');i=0;
+      setTimeout(next,100);
+    }
+  }
+  next();
+}
+
+function updateChatUI(){
+  const t=UI[lang];
+  const isPet=mode==='pet';
+  document.getElementById('chat-icon').innerText=isPet?'🐶':'👩‍⚕️';
+  document.getElementById('chat-title').innerText=isPet?t.chatTitlePet:t.chatTitleExpert;
+  document.getElementById('chat-subtitle').innerText=isPet?t.chatSubPet:t.chatSubExpert;
+  document.getElementById('status-text').innerText=t.statusOnline;
+  document.getElementById('chat-input').placeholder=isPet?t.inputPet:t.inputExpert;
+  document.getElementById('tab-pet-label').innerText=t.tabPet;
+  document.getElementById('tab-expert-label').innerText=t.tabExpert;
+  renderQuick();
+}
+
+function renderQuick(){
+  const t=UI[lang];
+  const qs=mode==='pet'?t.quickPet:t.quickExpert;
+  document.getElementById('quick-btns').innerHTML=
+    qs.map(q=>`<button class="quick-btn noto" onclick="sendQuick('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');
 }
 
 function setLang(l,el){
@@ -907,113 +946,81 @@ function setLang(l,el){
   el.classList.add('active');
 }
 
-/* 打字機 */
-function typeDialog(text){
-  const el=document.getElementById('dialog-text');
-  el.innerText='';
-  const lines=text.split('\n');
-  let li=0,i=0,chars=lines[0].split('');
-  function next(){
-    if(li>=lines.length)return;
-    if(i<chars.length){el.innerText+=chars[i++];setTimeout(next,45);}
-    else if(li<lines.length-1){el.innerText+='\n';li++;chars=lines[li].split('');i=0;setTimeout(next,120);}
-  }
-  next();
-}
-
-/* ════════════════════════════════
-   頁籤切換
-════════════════════════════════ */
-function switchTab(name, el){
-  TABS.forEach((t,i)=>{
-    document.getElementById('page-'+t).classList.toggle('active',t===name);
-    document.getElementById('tab-'+t).classList.toggle('active',t===name);
-    if(t===name) currentTabIdx=i;
-  });
-}
-function switchTabByName(name){
-  const btn=document.getElementById('tab-'+name);
-  switchTab(name,btn);
-}
-function dpadTab(dir){
-  currentTabIdx=(currentTabIdx+dir+TABS.length)%TABS.length;
-  switchTabByName(TABS[currentTabIdx]);
-}
-function dpadNav(dir){
-  const msgs=document.getElementById('chat-msgs');
-  msgs.scrollTop+=dir*40;
-}
-
-/* ════════════════════════════════
-   聊天
-════════════════════════════════ */
-function clearChat(){document.getElementById('chat-msgs').innerHTML='';}
-function addGreeting(){
-  const t=UI[lang];
-  const g=t.greet[mode==='pet'?0:1];
-  addBotMsg(g);chatHistory=[{role:'assistant',content:g}];
-}
-function addBotMsg(text){
-  const el=document.getElementById('chat-msgs');
-  const d=document.createElement('div');d.className='msg bot';
-  d.innerHTML=`<div class="msg-ic">${mode==='pet'?'🐶':'👩‍⚕️'}</div><div class="msg-bub">${text.replace(/\n/g,'<br>')}</div>`;
-  el.appendChild(d);el.scrollTop=el.scrollHeight;
-}
-function addUserMsg(text){
-  const el=document.getElementById('chat-msgs');
-  const d=document.createElement('div');d.className='msg user';
-  d.innerHTML=`<div class="msg-ic">🧑</div><div class="msg-bub">${text}</div>`;
-  el.appendChild(d);el.scrollTop=el.scrollHeight;
-}
-function showTyping(){
-  const el=document.getElementById('chat-msgs');
-  const d=document.createElement('div');d.className='msg bot';d.id='typing-msg';
-  d.innerHTML=`<div class="msg-ic">${mode==='pet'?'🐶':'👩‍⚕️'}</div><div class="typing-bub"><div class="tp"></div><div class="tp"></div><div class="tp"></div></div>`;
-  el.appendChild(d);el.scrollTop=el.scrollHeight;
-}
-function removeTyping(){const t=document.getElementById('typing-msg');if(t)t.remove();}
-function renderQuick(){
-  const t=UI[lang];
-  const qs=t.quick[mode==='pet'?0:1];
-  document.getElementById('quick-row').innerHTML=qs.map(q=>`<button class="qbtn" onclick="sendQuick('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');
-}
 function switchMode(m){
   mode=m;chatHistory=[];
-  document.getElementById('cm-pet').classList.toggle('active',m==='pet');
-  document.getElementById('cm-exp').classList.toggle('active',m==='expert');
-  const t=UI[lang];
-  document.getElementById('chat-inp').placeholder=t.inputPh[m==='pet'?0:1];
-  clearChat();renderQuick();addGreeting();
+  document.getElementById('tab-pet').classList.toggle('active',m==='pet');
+  document.getElementById('tab-expert').classList.toggle('active',m==='expert');
+  clearChat();updateChatUI();addGreeting();
 }
-function sendQuick(q){document.getElementById('chat-inp').value=q;sendMsg();}
+
+/* ══════════════════════════════
+   聊天
+══════════════════════════════ */
+function clearChat(){document.getElementById('chat-messages').innerHTML='';}
+
+function addGreeting(){
+  const t=UI[lang];
+  const g=mode==='pet'?t.greetPet:t.greetExpert;
+  addBotMsg(g);chatHistory=[{role:'assistant',content:g}];
+}
+
+function addBotMsg(text){
+  const el=document.getElementById('chat-messages');
+  const d=document.createElement('div');d.className='msg bot';
+  d.innerHTML=`<div class="msg-icon">${mode==='pet'?'🐶':'👩‍⚕️'}</div><div class="msg-bubble noto">${text.replace(/\n/g,'<br>')}</div>`;
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+
+function addUserMsg(text){
+  const el=document.getElementById('chat-messages');
+  const d=document.createElement('div');d.className='msg user';
+  d.innerHTML=`<div class="msg-icon">🧑</div><div class="msg-bubble noto">${text}</div>`;
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+
+function showTyping(){
+  const el=document.getElementById('chat-messages');
+  const d=document.createElement('div');d.className='msg bot';d.id='typing-msg';
+  d.innerHTML=`<div class="msg-icon">${mode==='pet'?'🐶':'👩‍⚕️'}</div><div class="typing-bubble"><div class="typing-px"></div><div class="typing-px"></div><div class="typing-px"></div></div>`;
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+
+function removeTyping(){const t=document.getElementById('typing-msg');if(t)t.remove();}
+
+function sendQuick(q){document.getElementById('chat-input').value=q;sendMsg();}
 
 async function sendMsg(){
   if(isThinking)return;
-  const inp=document.getElementById('chat-inp');
-  const text=inp.value.trim();if(!text)return;
-  inp.value='';
+  const input=document.getElementById('chat-input');
+  const text=input.value.trim();if(!text)return;
+  input.value='';
   addUserMsg(text);chatHistory.push({role:'user',content:text});
   isThinking=true;document.getElementById('send-btn').disabled=true;
   showTyping();
-  const info=`Name:${PET.nameZh}(${PET.nameEn}),Breed:${PET.breed_en},Personality:${PET.personality_en},Skill:${PET.special_en},Phone:${PET.phone}`;
+
+  const petInfo=`Name: ${PET.nameZh}(${PET.nameEn}), Breed: ${PET.breed_en}, Personality: ${PET.personality_en}, Special: ${PET.special_en}, Owner phone: ${PET.phone}`;
   const sys=mode==='pet'
-    ?`You are ${PET.nameZh}(${PET.nameEn}), a ${PET.breed_en}. Speak AS THE DOG in first person — playful, energetic, loves ball sports. Like a Pokémon speaking. Keep replies to 2-3 short sentences. Use dog sounds. Info:${info}. Reply in same language as user.`
-    :`You are a GodiVanLife Pokédex AI for pets. Expert in ${PET.breed_en}. If lost pet emergency, guide to press Y or call ${PET.phone}. Info:${info}. Brief replies 3-4 sentences. Reply in same language as user.`;
+    ?`You are ${PET.nameZh}(${PET.nameEn}), a ${PET.breed_en} dog with a pixel/Pokemon game aesthetic. Speak AS THE DOG in first person — playful, energetic, loves ball sports. Use "汪" sounds in Chinese. Keep replies to 2-3 short sentences. Info: ${petInfo}. Reply in the same language as the user.`
+    :`You are a GodiVanLife Pet Dex AI advisor styled like a Pokédex. You specialize in ${PET.breed_en}. If lost pet emergency, guide to call ${PET.phone} or use GPS button. Info: ${petInfo}. Keep replies brief (3-4 sentences). Reply in same language as user.`;
+
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:chatHistory.slice(-8)})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:chatHistory.slice(-8)})
+    });
     const data=await res.json();
     const reply=data.content?.[0]?.text||'...';
     removeTyping();addBotMsg(reply);chatHistory.push({role:'assistant',content:reply});
   }catch(e){
     removeTyping();
-    addBotMsg({zh:'訊號中斷！請重試！',en:'Signal lost! Try again!',ja:'通信が切れた！もう一度！'}[lang]);
+    addBotMsg({zh:'接線中斷！請稍後再試！',en:'Connection lost! Try again!',ja:'通信が切れた！もう一度試して！'}[lang]);
   }
   isThinking=false;document.getElementById('send-btn').disabled=false;
 }
 
-/* ════════════════════════════════
+/* ══════════════════════════════
    GPS
-════════════════════════════════ */
+══════════════════════════════ */
 function sendGPS(){
   const btn=document.getElementById('gps-btn');
   const t=UI[lang];
@@ -1024,78 +1031,242 @@ function sendGPS(){
     const msg=encodeURIComponent(`🐶 發現${PET.nameZh}！位置：`+url);
     window.location.href=`sms:${PET.gps}?body=${msg}`;
     btn.disabled=false;btn.innerText=t.gpsBtn;
-  },()=>{alert(t.gpsError);btn.disabled=false;btn.innerText=t.gpsBtn;},{enableHighAccuracy:true,timeout:8000,maximumAge:0});
+  },()=>{alert(t.gpsError);btn.disabled=false;btn.innerText=t.gpsBtn;},
+  {enableHighAccuracy:true,timeout:8000,maximumAge:0});
 }
 
-/* ════════════════════════════════
-   8-BIT 戰鬥音樂引擎
-════════════════════════════════ */
-let audioCtx=null, masterGain=null, isMuted=false, loopTimer=null, scheduledNodes=[];
-
-function startMusic(){
-  try{
-    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-    masterGain=audioCtx.createGain();masterGain.gain.value=0.5;
-    masterGain.connect(audioCtx.destination);
-    scheduleLoop();
-  }catch(e){}
-}
-const NOTE={C3:130.81,D3:146.83,E3:164.81,F3:174.61,G3:196,A3:220,B3:246.94,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.25,Bb3:233.08,Gb4:369.99,Ab4:415.30,Bb4:466.16,R:0};
-const MELODY=[{n:'E4',d:.125},{n:'E4',d:.125},{n:'R',d:.125},{n:'E4',d:.125},{n:'R',d:.125},{n:'C4',d:.125},{n:'E4',d:.25},{n:'G4',d:.5},{n:'R',d:.25},{n:'G3',d:.25},{n:'C4',d:.375},{n:'R',d:.125},{n:'G3',d:.25},{n:'R',d:.25},{n:'E3',d:.375},{n:'R',d:.125},{n:'A3',d:.25},{n:'B3',d:.25},{n:'Bb3',d:.125},{n:'A3',d:.25},{n:'G3',d:.25},{n:'E4',d:.25},{n:'G4',d:.25},{n:'A4',d:.25},{n:'F4',d:.25},{n:'G4',d:.25},{n:'R',d:.125},{n:'E4',d:.25},{n:'C4',d:.125},{n:'D4',d:.125},{n:'B3',d:.5},{n:'R',d:.5}];
-const BASS=[{n:'C3',d:.25},{n:'C3',d:.25},{n:'G3',d:.25},{n:'C3',d:.25},{n:'C3',d:.25},{n:'G3',d:.25},{n:'E3',d:.25},{n:'G3',d:.25},{n:'A3',d:.25},{n:'A3',d:.25},{n:'F3',d:.25},{n:'A3',d:.25},{n:'F3',d:.25},{n:'G3',d:.25},{n:'E3',d:.25},{n:'G3',d:.25},{n:'C3',d:.25},{n:'C3',d:.25},{n:'G3',d:.25},{n:'C3',d:.25},{n:'A3',d:.25},{n:'G3',d:.25},{n:'F3',d:.25},{n:'E3',d:.25},{n:'D3',d:.25},{n:'D3',d:.25},{n:'A3',d:.25},{n:'D3',d:.25},{n:'G3',d:.25},{n:'F3',d:.25},{n:'E3',d:.25},{n:'D3',d:.25}];
-const DRUM=[1,0,0,0,1,0,1,0,1,0,0,0,1,0,1,1];
-
-function makeOsc(freq,type,st,dur,vol){
-  if(!freq||!audioCtx)return;
-  const o=audioCtx.createOscillator();const g=audioCtx.createGain();
-  o.type=type;o.frequency.setValueAtTime(freq,st);
-  g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(vol,st+0.005);
-  g.gain.setValueAtTime(vol,st+dur-0.04);g.gain.linearRampToValueAtTime(0,st+dur);
-  o.connect(g);g.connect(masterGain);o.start(st);o.stop(st+dur+0.01);
-  scheduledNodes.push(o,g);
-}
-function makeDrum(st,kick){
-  if(!audioCtx)return;
-  const buf=audioCtx.createBuffer(1,Math.floor(audioCtx.sampleRate*.08),audioCtx.sampleRate);
-  const data=buf.getChannelData(0);
-  for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*(1-i/data.length);
-  const src=audioCtx.createBufferSource();src.buffer=buf;
-  const g=audioCtx.createGain();const f=audioCtx.createBiquadFilter();
-  f.type=kick?'lowpass':'highpass';f.frequency.value=kick?200:3000;
-  g.gain.setValueAtTime(kick?.45:.16,st);g.gain.exponentialRampToValueAtTime(0.001,st+.08);
-  src.connect(f);f.connect(g);g.connect(masterGain);src.start(st);src.stop(st+.1);
-  scheduledNodes.push(src,g);
-}
-function scheduleLoop(){
-  if(!audioCtx)return;
-  const BPM=168,BEAT=60/BPM,STEP=BEAT/4;
-  const startT=audioCtx.currentTime+0.1;
-  let t=startT;
-  for(const n of MELODY){const f=NOTE[n.n]||0,dur=n.d*BEAT*4;if(f)makeOsc(f*2,'square',t,dur*.85,.16);t+=dur;}
-  const loopLen=t-startT;
-  t=startT;
-  for(const n of BASS){const f=NOTE[n.n]||0,dur=n.d*BEAT*4;if(f)makeOsc(f,'triangle',t,dur*.7,.2);t+=dur;}
-  const reps=Math.ceil(loopLen/(STEP*DRUM.length));
-  for(let r=0;r<reps;r++)for(let s=0;s<DRUM.length;s++){const dt=startT+r*STEP*DRUM.length+s*STEP;if(dt>=startT+loopLen)break;if(DRUM[s])makeDrum(dt,s===0||s===4||s===8||s===12);}
-  loopTimer=setTimeout(()=>{scheduledNodes.forEach(n=>{try{n.disconnect();}catch(e){}});scheduledNodes=[];scheduleLoop();},(loopLen-.5)*1000);
-}
-function toggleMuteUI(){
-  isMuted=!isMuted;
-  if(masterGain&&audioCtx)masterGain.gain.setTargetAtTime(isMuted?0:.5,audioCtx.currentTime,.1);
-  const btn=document.getElementById('mute-btn');
-  btn.innerText=isMuted?'🔇':'🔊';
-  document.getElementById('vol-disp').innerText=isMuted?'♪ OFF':'♪ ON';
-}
-function unlockAudio(){startMusic();document.removeEventListener('touchstart',unlockAudio);document.removeEventListener('click',unlockAudio);}
-document.addEventListener('DOMContentLoaded',()=>{try{startMusic();}catch(e){}});
-document.addEventListener('touchstart',unlockAudio,{once:true});
-document.addEventListener('click',unlockAudio,{once:true});
-
-/* ════════════════════════════════
+/* ══════════════════════════════
    Init
-════════════════════════════════ */
+══════════════════════════════ */
 applyLang();
 addGreeting();
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* ══════════════════════════════
+   8-BIT 戰鬥配樂引擎
+   Web Audio API — 純程式生成，無需外部音檔
+══════════════════════════════ */
+const Music = (() => {
+  let ctx, masterGain, isMuted = false, isPlaying = false;
+  let scheduledNodes = [];
+  let loopTimer = null;
+
+  /* ── 音符頻率表 ── */
+  const NOTE = {
+    C3:130.81,D3:146.83,E3:164.81,F3:174.61,G3:196,A3:220,B3:246.94,
+    C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,
+    C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880,
+    Db4:277.18,Eb4:311.13,Gb4:369.99,Ab4:415.30,Bb4:466.16,
+    Db5:554.37,Eb5:622.25,Gb5:739.99,Ab5:830.61,
+    R:0 // rest
+  };
+
+  /* ── 戰鬥主旋律（神奇寶貝風緊張感） ── */
+  const MELODY = [
+    // bar 1
+    {n:'E4',d:.125},{n:'E4',d:.125},{n:'R',d:.125},{n:'E4',d:.125},
+    {n:'R',d:.125},{n:'C4',d:.125},{n:'E4',d:.25},
+    // bar 2
+    {n:'G4',d:.5},{n:'R',d:.25},{n:'G3',d:.25},
+    // bar 3
+    {n:'C4',d:.375},{n:'R',d:.125},{n:'G3',d:.25},{n:'R',d:.25},
+    // bar 4
+    {n:'E3',d:.375},{n:'R',d:.125},{n:'A3',d:.25},{n:'B3',d:.25},
+    // bar 5
+    {n:'Bb3',d:.125},{n:'A3',d:.25},{n:'G3',d:.25},{n:'E4',d:.25},{n:'G4',d:.25},
+    // bar 6
+    {n:'A4',d:.25},{n:'F4',d:.25},{n:'G4',d:.25},{n:'R',d:.125},{n:'E4',d:.25},{n:'C4',d:.125},{n:'D4',d:.125},
+    // bar 7
+    {n:'B3',d:.5},{n:'R',d:.5},
+    // bar 8 (緊張上升)
+    {n:'G4',d:.125},{n:'Ab4',d:.125},{n:'G4',d:.125},{n:'Eb4',d:.125},
+    {n:'E4',d:.25},{n:'R',d:.125},{n:'A3',d:.125},
+    // repeat tension
+    {n:'A3',d:.125},{n:'C4',d:.25},{n:'A3',d:.125},{n:'C4',d:.25},{n:'D4',d:.375},{n:'R',d:.125},
+  ];
+
+  /* ── 低音線 ── */
+  const BASS = [
+    {n:'C3',d:.25},{n:'C3',d:.25},{n:'G3',d:.25},{n:'C3',d:.25},
+    {n:'C3',d:.25},{n:'G3',d:.25},{n:'E3',d:.25},{n:'G3',d:.25},
+    {n:'A3',d:.25},{n:'A3',d:.25},{n:'F3',d:.25},{n:'A3',d:.25},
+    {n:'F3',d:.25},{n:'G3',d:.25},{n:'E3',d:.25},{n:'G3',d:.25},
+    {n:'C3',d:.25},{n:'C3',d:.25},{n:'G3',d:.25},{n:'C3',d:.25},
+    {n:'A3',d:.25},{n:'G3',d:.25},{n:'F3',d:.25},{n:'E3',d:.25},
+    {n:'D3',d:.25},{n:'D3',d:.25},{n:'A3',d:.25},{n:'D3',d:.25},
+    {n:'G3',d:.25},{n:'F3',d:.25},{n:'E3',d:.25},{n:'D3',d:.25},
+  ];
+
+  /* ── 打擊節奏 ── */
+  const DRUM_PATTERN = [1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,1]; // 16步
+
+  /* ── 建立音源 ── */
+  function makeOsc(freq, type, startT, dur, gainVal, attack=0.005, release=0.05){
+    if(!freq) return;
+    const osc = ctx.createOscillator();
+    const g   = ctx.createGain();
+    osc.type  = type;
+    osc.frequency.setValueAtTime(freq, startT);
+    g.gain.setValueAtTime(0, startT);
+    g.gain.linearRampToValueAtTime(gainVal, startT + attack);
+    g.gain.setValueAtTime(gainVal, startT + dur - release);
+    g.gain.linearRampToValueAtTime(0, startT + dur);
+    osc.connect(g); g.connect(masterGain);
+    osc.start(startT); osc.stop(startT + dur + 0.01);
+    scheduledNodes.push(osc, g);
+  }
+
+  /* ── 打擊音（noise burst） ── */
+  function makeDrum(startT, isKick){
+    const bufSize = ctx.sampleRate * 0.08;
+    const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for(let i=0;i<bufSize;i++) data[i]=(Math.random()*2-1)*(1-i/bufSize);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const g = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+    if(isKick){
+      filter.type='lowpass'; filter.frequency.value=200;
+      g.gain.setValueAtTime(0.5, startT);
+    } else {
+      filter.type='highpass'; filter.frequency.value=3000;
+      g.gain.setValueAtTime(0.18, startT);
+    }
+    g.gain.exponentialRampToValueAtTime(0.001, startT+0.08);
+    src.connect(filter); filter.connect(g); g.connect(masterGain);
+    src.start(startT); src.stop(startT+0.1);
+    scheduledNodes.push(src, g);
+  }
+
+  /* ── 排程一個完整 loop ── */
+  function scheduleLoop(startT){
+    const BPM   = 168;
+    const BEAT  = 60 / BPM;       // 一拍秒數
+    const STEP  = BEAT / 4;       // 16分音符
+
+    // 旋律聲道（方波）
+    let t = startT;
+    for(const note of MELODY){
+      const freq = NOTE[note.n] || 0;
+      const dur  = note.d * BEAT * 4;
+      if(freq) makeOsc(freq*2, 'square', t, dur*0.85, 0.18);
+      t += dur;
+    }
+    const loopLen = t - startT;
+
+    // 低音聲道（三角波）
+    t = startT;
+    for(const note of BASS){
+      const freq = NOTE[note.n] || 0;
+      const dur  = note.d * BEAT * 4;
+      if(freq) makeOsc(freq, 'triangle', t, dur*0.7, 0.22);
+      t += dur;
+    }
+
+    // 和弦嗡鳴（脈衝）
+    const CHORDS=[
+      [NOTE.C4,NOTE.E4,NOTE.G4],
+      [NOTE.A3,NOTE.C4,NOTE.E4],
+      [NOTE.F3,NOTE.A3,NOTE.C4],
+      [NOTE.G3,NOTE.B3,NOTE.D4],
+    ];
+    for(let i=0;i<CHORDS.length;i++){
+      const ct = startT + i * BEAT * 4 * 2;
+      for(const f of CHORDS[i]){
+        makeOsc(f,'sawtooth',ct, BEAT*4*1.9, 0.04, 0.01, 0.3);
+      }
+    }
+
+    // 打擊音軌（循環整個 loopLen）
+    const drumLoops = Math.ceil(loopLen / (STEP * DRUM_PATTERN.length));
+    for(let rep=0; rep<drumLoops; rep++){
+      for(let s=0; s<DRUM_PATTERN.length; s++){
+        const dt = startT + rep*STEP*DRUM_PATTERN.length + s*STEP;
+        if(dt >= startT + loopLen) break;
+        if(DRUM_PATTERN[s]){
+          const isKick = (s===0||s===4||s===8||s===12);
+          makeDrum(dt, isKick);
+        }
+      }
+    }
+
+    return loopLen;
+  }
+
+  /* ── 主控 ── */
+  function start(){
+    if(isPlaying) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = ctx.createGain();
+    masterGain.gain.value = 0.55;
+    masterGain.connect(ctx.destination);
+    isPlaying = true;
+
+    let nextStart = ctx.currentTime + 0.1;
+    function loop(){
+      const len = scheduleLoop(nextStart);
+      nextStart += len;
+      loopTimer = setTimeout(loop, (len - 0.5) * 1000);
+    }
+    loop();
+  }
+
+  function stop(){
+    if(loopTimer) clearTimeout(loopTimer);
+    scheduledNodes.forEach(n=>{ try{ n.disconnect(); }catch(e){} });
+    scheduledNodes = [];
+    if(ctx){ ctx.close(); ctx=null; }
+    isPlaying = false;
+  }
+
+  function toggleMute(){
+    isMuted = !isMuted;
+    if(masterGain) masterGain.gain.setTargetAtTime(isMuted?0:0.55, ctx.currentTime, 0.1);
+    return isMuted;
+  }
+
+  /* 手機需要 user gesture 才能啟動 AudioContext，
+     用第一次任意觸碰來解鎖 */
+  function tryAutoplay(){
+    start();
+    document.removeEventListener('touchstart', tryAutoplay);
+    document.removeEventListener('click', tryAutoplay);
+  }
+
+  // 桌面直接嘗試；行動端等第一次觸碰
+  document.addEventListener('DOMContentLoaded', ()=>{
+    try{ start(); } catch(e){}
+  });
+  document.addEventListener('touchstart', tryAutoplay, {once:true});
+  document.addEventListener('click', tryAutoplay, {once:true});
+
+  return { toggleMute, stop };
+})();
+
+/* ── 音效開關按鈕 ── */
+(function addMuteBtn(){
+  const btn = document.createElement('button');
+  btn.id = 'mute-btn';
+  btn.innerText = '🔊';
+  btn.style.cssText=`
+    position:fixed;bottom:16px;right:16px;z-index:400;
+    width:44px;height:44px;
+    background:var(--dark);border:3px solid var(--yellow);
+    color:var(--yellow);font-size:1.1rem;
+    cursor:pointer;box-shadow:3px 3px 0 var(--black);
+    font-family:'Press Start 2P',monospace;
+    display:flex;align-items:center;justify-content:center;
+  `;
+  btn.onclick = ()=>{
+    const muted = Music.toggleMute();
+    btn.innerText = muted ? '🔇' : '🔊';
+    btn.style.borderColor = muted ? 'var(--mid)' : 'var(--yellow)';
+    btn.style.color = muted ? 'var(--mid)' : 'var(--yellow)';
+  };
+  document.body.appendChild(btn);
+})();
 </script>
 
 </body>
