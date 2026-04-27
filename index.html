@@ -1,398 +1,1102 @@
 <!DOCTYPE html>
+
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>得意 Dere 🐶</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=DM+Sans:wght@400;500&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>得意 Dere — GodiVanLife Pokédex</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
+*{margin:0;padding:0;box-sizing:border-box;image-rendering:pixelated;}
 :root{
-  --cream:#f8f4ee;
-  --warm:#ede4d4;
-  --sand:#b89060;
-  --dark:#180e00;
-  --accent:#2e7d32;
-  --accent2:#4caf50;
+  --dex-red:#cc2200;
+  --dex-red2:#ee3311;
+  --dex-red3:#ff5533;
+  --dex-dark:#1a0800;
+  --dex-hinge:#333;
+  --screen-bg:#9bbc0f;
+  --screen-dark:#0f380f;
+  --screen-mid:#306230;
+  --screen-light:#8bac0f;
+  --screen-white:#9bbc0f;
+  --inner-bg:#8fb0a0;
+  --btn-blue:#2244cc;
+  --btn-yellow:#ddaa00;
+  --pixel:3px;
+  --black:#000;
+  --white:#eee;
 }
 
-body{
-  background:var(--cream);
-  font-family:'DM Sans','Noto Sans JP',sans-serif;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  min-height:100vh;
+html,body{
+height:100%;
+background:#111;
+display:flex;
+justify-content:center;
+align-items:flex-start;
+font-family:‘Press Start 2P’,monospace;
+overflow-x:hidden;
 }
 
-/* ─── 語言列 ─── */
-.lang-bar{
-  position:fixed;
-  top:14px;
-  right:14px;
-  display:flex;
-  gap:6px;
-  z-index:100;
+/* ════════════════════════
+圖鑑機外殼
+════════════════════════ */
+.pokedex{
+width:100%;
+max-width:420px;
+min-height:100vh;
+background:var(–dex-red);
+position:relative;
+display:flex;
+flex-direction:column;
+box-shadow:
+inset -4px 0 0 var(–dex-dark),
+inset 4px 0 0 rgba(255,255,255,.12),
+inset 0 4px 0 rgba(255,255,255,.12),
+6px 6px 0 var(–dex-dark);
+}
+
+/* 上殼反光 */
+.pokedex::before{
+content:’’;
+position:absolute;top:0;left:0;right:0;
+height:50%;
+background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);
+pointer-events:none;z-index:10;
+}
+
+/* 折頁紋 */
+.hinge{
+height:12px;
+background:repeating-linear-gradient(
+90deg,
+var(–dex-dark) 0px,var(–dex-dark) 4px,
+var(–dex-red) 4px,var(–dex-red) 8px
+);
+border-top:3px solid var(–dex-dark);
+border-bottom:3px solid var(–dex-dark);
+}
+
+/* ════════════════════════
+頂部燈飾區
+════════════════════════ */
+.dex-top{
+padding:16px 16px 10px;
+display:flex;
+align-items:center;
+gap:12px;
+border-bottom:4px solid var(–dex-dark);
+background:var(–dex-red2);
+}
+
+/* 大藍燈 */
+.big-light{
+width:44px;height:44px;
+border-radius:50%;
+background:radial-gradient(circle at 35% 35%,#88ccff,#2244aa);
+border:4px solid var(–dex-dark);
+box-shadow:
+inset -2px -2px 0 rgba(0,0,0,.4),
+inset 2px 2px 0 rgba(255,255,255,.3),
+0 0 12px rgba(100,180,255,.6);
+animation:bigLightPulse 2s ease-in-out infinite alternate;
+flex-shrink:0;
+}
+@keyframes bigLightPulse{
+from{box-shadow:inset -2px -2px 0 rgba(0,0,0,.4),inset 2px 2px 0 rgba(255,255,255,.3),0 0 8px rgba(100,180,255,.4);}
+to{box-shadow:inset -2px -2px 0 rgba(0,0,0,.4),inset 2px 2px 0 rgba(255,255,255,.3),0 0 24px rgba(100,180,255,.9);}
+}
+
+/* 小燈排 */
+.small-lights{display:flex;gap:6px;align-items:center;}
+.sml{width:12px;height:12px;border-radius:50%;border:2px solid var(–dex-dark);}
+.sml-r{background:#ff3333;box-shadow:0 0 6px #ff3333;}
+.sml-y{background:#ffdd00;box-shadow:0 0 6px #ffdd00;}
+.sml-g{background:#33ff66;box-shadow:0 0 6px #33ff66;animation:greenBlink 1.5s step-end infinite;}
+@keyframes greenBlink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+.dex-top-title{
+font-size:.45rem;color:rgba(255,255,255,.7);
+letter-spacing:.08em;margin-left:auto;
+}
+
+/* ════════════════════════
+語言切換（圖鑑風按鈕）
+════════════════════════ */
+.lang-row{
+display:flex;gap:4px;padding:8px 16px;
+background:var(–dex-red);
+border-bottom:3px solid var(–dex-dark);
 }
 .lang-btn{
-  padding:6px 12px;
-  border-radius:99px;
-  border:none;
-  background:rgba(0,0,0,0.35);
-  color:#fff;
-  cursor:pointer;
-  font-size:0.8rem;
-  backdrop-filter:blur(6px);
-  transition:background 0.2s,color 0.2s;
+flex:1;padding:6px 4px;
+background:var(–dex-dark);border:3px solid var(–dex-dark);
+color:rgba(255,255,255,.5);
+font-family:‘Press Start 2P’,monospace;font-size:.4rem;
+cursor:pointer;box-shadow:2px 2px 0 rgba(0,0,0,.5);
+transition:none;
 }
 .lang-btn.active{
-  background:#fff;
-  color:var(--accent);
-  font-weight:600;
+background:var(–btn-yellow);color:var(–dex-dark);
+border-color:var(–btn-yellow);
+box-shadow:2px 2px 0 var(–dex-dark);
+}
+.lang-btn:hover:not(.active){background:#333;}
+
+/* ════════════════════════
+主螢幕（上）
+════════════════════════ */
+.main-screen-wrap{
+padding:12px 16px 8px;
+background:var(–dex-red2);
+}
+.main-screen{
+background:var(–screen-dark);
+border:6px solid var(–dex-dark);
+box-shadow:
+inset 3px 3px 0 rgba(0,0,0,.5),
+inset -2px -2px 0 rgba(255,255,255,.05),
+3px 3px 0 var(–dex-dark);
+position:relative;overflow:hidden;
+}
+/* 螢幕掃描線 */
+.main-screen::after{
+content:’’;position:absolute;inset:0;pointer-events:none;
+background:repeating-linear-gradient(
+0deg,
+transparent 0px,transparent 3px,
+rgba(0,0,0,.15) 3px,rgba(0,0,0,.15) 4px
+);z-index:5;
+}
+/* 螢幕反光 */
+.main-screen::before{
+content:’’;position:absolute;top:0;left:0;right:0;height:40%;
+background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);
+pointer-events:none;z-index:6;
 }
 
-/* ─── HERO ─── */
-.hero{
-  width:100%;
-  text-align:center;
-  padding:60px 20px 28px;
-  background:linear-gradient(160deg,#1a3a1c,#2e6030,#2e7d32,#4caf50);
-  color:#fff;
-  position:relative;
-  overflow:hidden;
+/* 精靈展示區 */
+.sprite-area{
+display:flex;align-items:center;justify-content:space-between;
+padding:16px 12px 8px;
+position:relative;
 }
-.hero::before{
-  content:"⚽";
-  position:absolute;
-  font-size:150px;
-  opacity:0.07;
-  left:-20px;
-  bottom:-20px;
-  transform:rotate(-10deg);
+.sprite-frame{
+width:100px;height:100px;
+background:var(–screen-bg);
+border:4px solid var(–screen-mid);
+display:flex;align-items:center;justify-content:center;
+position:relative;overflow:hidden;
+box-shadow:inset 2px 2px 0 rgba(0,0,0,.3);
 }
-.hero::after{
-  content:"🏀";
-  position:absolute;
-  font-size:110px;
-  opacity:0.06;
-  right:-10px;
-  top:-10px;
-  transform:rotate(15deg);
+.sprite-frame img{
+width:100%;height:100%;object-fit:cover;
+filter:contrast(1.1) saturate(1.2);
+animation:spriteIdle 2s ease-in-out infinite alternate;
+}
+@keyframes spriteIdle{
+from{transform:translateY(0);}
+to{transform:translateY(-4px);}
 }
 
-.avatar-ring{
-  width:124px;
-  height:124px;
-  border-radius:50%;
-  overflow:hidden;
-  margin:auto;
-  border:4px solid rgba(255,255,255,0.45);
-  box-shadow:0 12px 36px rgba(0,0,0,0.3);
-  animation:pop 0.55s cubic-bezier(0.34,1.56,0.64,1);
-  background:rgba(255,255,255,0.15);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:56px;
+/* 圖鑑號碼 + 名字 */
+.dex-info-right{
+flex:1;padding-left:12px;
+display:flex;flex-direction:column;gap:6px;
 }
-.avatar-ring img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-@keyframes pop{
-  from{transform:scale(0.6);opacity:0;}
-  to{transform:scale(1);opacity:1;}
+.dex-number{font-size:.4rem;color:var(–screen-light);letter-spacing:.08em;}
+.dex-name-main{font-size:.75rem;color:var(–screen-bg);line-height:1.4;}
+.dex-name-sub{font-size:.38rem;color:var(–screen-light);}
+.dex-types{display:flex;gap:4px;margin-top:2px;}
+.dex-type{
+padding:3px 7px;font-size:.35rem;
+border:2px solid var(–screen-mid);
+color:var(–screen-bg);background:var(–screen-mid);
 }
 
-.hero-name{
-  font-family:'Playfair Display',serif;
-  font-size:2.5rem;
-  margin-top:12px;
-  letter-spacing:0.02em;
+/* HP 列 */
+.hp-section{
+padding:0 12px 12px;
 }
-.hero-sub{
-  font-size:0.85rem;
-  opacity:0.7;
-  margin-top:4px;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
+.hp-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.hp-label-px{font-size:.4rem;color:var(–screen-light);width:20px;}
+.hp-track{
+flex:1;height:8px;
+background:var(–screen-dark);
+border:2px solid var(–screen-mid);
 }
-.hero-warning{
-  margin:16px auto 0;
-  max-width:340px;
-  background:rgba(0,0,0,0.25);
-  border:1.5px solid rgba(255,255,255,0.25);
-  border-radius:12px;
-  padding:12px 16px;
-  font-size:0.88rem;
-  font-weight:600;
-  line-height:1.5;
-  backdrop-filter:blur(4px);
+.hp-bar{
+height:100%;
+background:repeating-linear-gradient(
+90deg,#4eff91 0px,#4eff91 5px,transparent 5px,transparent 7px
+);
+transition:width 1s steps(10);
+}
+.hp-bar.low{
+background:repeating-linear-gradient(
+90deg,#ff4444 0px,#ff4444 5px,transparent 5px,transparent 7px
+);
+}
+.hp-num{font-size:.38rem;color:var(–screen-bg);}
+.status-tag{
+font-size:.35rem;padding:2px 6px;
+border:2px solid #ff4444;color:#ff4444;
+animation:statusBlink .8s step-end infinite;
+display:inline-block;margin-top:2px;
+}
+@keyframes statusBlink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* 對話文字框 */
+.dialog-area{
+background:var(–screen-bg);
+border-top:4px solid var(–screen-mid);
+padding:10px 12px;
+min-height:56px;position:relative;
+}
+.dialog-line{
+font-size:.45rem;color:var(–screen-dark);
+line-height:1.9;white-space:pre-wrap;
+}
+.dialog-cursor{
+display:inline-block;width:8px;height:10px;
+background:var(–screen-dark);
+animation:blink .6s step-end infinite;
+margin-left:2px;vertical-align:middle;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* ════════════════════════
+折頁區（中間轉軸）
+════════════════════════ */
+/* ════════════════════════
+頁籤選擇器（圖鑑分頁）
+════════════════════════ */
+.tab-row{
+display:grid;grid-template-columns:repeat(4,1fr);
+gap:2px;padding:8px 12px 0;
+background:var(–dex-red);
+}
+.dex-tab{
+padding:8px 4px;
+background:var(–dex-dark);
+border:3px solid var(–dex-dark);
+color:rgba(255,255,255,.4);
+font-family:‘Press Start 2P’,monospace;font-size:.35rem;
+cursor:pointer;text-align:center;line-height:1.6;
+transition:none;
+box-shadow:0 3px 0 rgba(0,0,0,.5);
+}
+.dex-tab.active{
+background:var(–inner-bg);color:var(–screen-dark);
+border-color:var(–dex-dark);
+box-shadow:none;transform:translateY(3px);
+}
+.dex-tab:hover:not(.active){background:#2a0a00;}
+
+/* ════════════════════════
+下半面板
+════════════════════════ */
+.dex-lower{
+flex:1;
+background:var(–inner-bg);
+border-top:4px solid var(–dex-dark);
+padding:12px;
+display:flex;flex-direction:column;gap:8px;
+min-height:0;
 }
 
-/* ─── 卡片區 ─── */
-.card-wrap{
-  max-width:420px;
-  width:100%;
-  padding:16px 16px 40px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
+/* 各頁內容 */
+.dex-page{display:none;}
+.dex-page.active{display:flex;flex-direction:column;gap:8px;}
+
+/* ── DATA 頁 ── */
+.data-screen{
+background:var(–screen-dark);
+border:4px solid var(–dex-dark);
+box-shadow:inset 2px 2px 0 rgba(0,0,0,.4),3px 3px 0 var(–dex-dark);
+padding:12px;
+}
+.data-screen::after{
+content:’’;display:block;
+}
+.data-row{
+display:flex;gap:6px;margin-bottom:6px;
+border-bottom:1px solid var(–screen-mid);
+padding-bottom:6px;
+}
+.data-row:last-child{border-bottom:none;margin-bottom:0;}
+.data-key{font-size:.38rem;color:var(–screen-light);width:64px;flex-shrink:0;line-height:1.8;}
+.data-val{font-size:.4rem;color:var(–screen-bg);line-height:1.8;flex:1;}
+.data-val.noto{font-family:‘Noto Sans JP’,monospace;}
+
+/* ── CHAT 頁 ── */
+.chat-mode-row{
+display:grid;grid-template-columns:1fr 1fr;gap:3px;
+margin-bottom:6px;
+}
+.chat-mode-btn{
+padding:8px;background:var(–dex-dark);
+border:3px solid rgba(255,255,255,.1);
+color:rgba(255,255,255,.4);
+font-family:‘Press Start 2P’,monospace;font-size:.38rem;
+cursor:pointer;text-align:center;line-height:1.6;
+box-shadow:2px 2px 0 rgba(0,0,0,.4);
+}
+.chat-mode-btn.active{
+background:var(–btn-yellow);color:var(–dex-dark);
+border-color:var(–btn-yellow);
+}
+.chat-screen{
+background:var(–screen-dark);
+border:4px solid var(–dex-dark);
+box-shadow:inset 2px 2px 0 rgba(0,0,0,.4),3px 3px 0 var(–dex-dark);
+display:flex;flex-direction:column;
+height:220px;
+}
+.chat-msgs{
+flex:1;overflow-y:auto;padding:8px;
+display:flex;flex-direction:column;gap:6px;
+scroll-behavior:smooth;
+}
+.chat-msgs::-webkit-scrollbar{width:4px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(–screen-mid);}
+.msg{display:flex;gap:5px;animation:msgPop .1s steps(2) both;}
+@keyframes msgPop{from{opacity:0;}to{opacity:1;}}
+.msg.user{flex-direction:row-reverse;}
+.msg-ic{width:20px;height:20px;flex-shrink:0;border:2px solid var(–screen-mid);display:flex;align-items:center;justify-content:center;font-size:.6rem;align-self:flex-end;}
+.msg.bot .msg-ic{background:var(–screen-mid);}
+.msg.user .msg-ic{background:var(–btn-yellow);}
+.msg-bub{max-width:80%;padding:5px 7px;border:2px solid var(–screen-mid);font-size:.38rem;line-height:1.8;}
+.msg.bot .msg-bub{background:var(–screen-mid);color:var(–screen-bg);font-family:‘Noto Sans JP’,monospace;}
+.msg.user .msg-bub{background:var(–btn-yellow);color:var(–dex-dark);font-family:‘Noto Sans JP’,monospace;}
+.typing-bub{display:flex;gap:4px;padding:6px 8px;background:var(–screen-mid);border:2px solid var(–screen-mid);}
+.tp{width:6px;height:6px;background:var(–screen-bg);animation:tp .8s step-end infinite;}
+.tp:nth-child(2){animation-delay:.27s;}.tp:nth-child(3){animation-delay:.54s;}
+@keyframes tp{0%,100%{opacity:1;}50%{opacity:0;}}
+.quick-row{padding:5px 6px;border-top:3px solid var(–dex-dark);display:flex;gap:4px;overflow-x:auto;flex-wrap:nowrap;background:rgba(0,0,0,.3);}
+.quick-row::-webkit-scrollbar{display:none;}
+.qbtn{flex-shrink:0;padding:4px 7px;background:var(–screen-dark);border:2px solid var(–screen-mid);color:var(–screen-light);font-family:‘Press Start 2P’,monospace;font-size:.32rem;cursor:pointer;white-space:nowrap;}
+.qbtn:hover{background:var(–screen-mid);}
+.chat-input-row{display:flex;border-top:3px solid var(–dex-dark);}
+.chat-inp{flex:1;padding:7px 8px;background:var(–screen-dark);border:none;outline:none;color:var(–screen-bg);font-family:‘Noto Sans JP’,monospace;font-size:.38rem;border-right:3px solid var(–dex-dark);}
+.chat-inp::placeholder{color:rgba(155,188,15,.3);}
+.chat-send{width:36px;background:var(–btn-yellow);border:none;cursor:pointer;color:var(–dex-dark);font-size:.8rem;font-family:‘Press Start 2P’,monospace;}
+.chat-send:disabled{background:var(–screen-mid);cursor:not-allowed;}
+
+/* ── DESTINY 頁 ── */
+.destiny-screen{
+background:var(–screen-dark);
+border:4px solid var(–dex-dark);
+box-shadow:inset 2px 2px 0 rgba(0,0,0,.4),3px 3px 0 var(–dex-dark);
+padding:10px;
+}
+.dest-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:2px solid var(–screen-mid);padding-bottom:6px;}
+.dest-label{font-size:.38rem;color:var(–btn-yellow);}
+.dest-date{font-size:.32rem;color:var(–screen-light);}
+.dest-emoji{font-size:1.8rem;text-align:center;display:block;margin:6px 0;filter:drop-shadow(0 0 6px rgba(155,188,15,.6));}
+.dest-msg{font-size:.38rem;color:var(–screen-bg);line-height:1.9;font-family:‘Noto Sans JP’,monospace;margin-bottom:10px;}
+.dest-bars{display:flex;flex-direction:column;gap:6px;}
+.dest-bar-row{display:flex;align-items:center;gap:6px;}
+.dest-bar-lbl{font-size:.32rem;color:var(–screen-light);width:50px;flex-shrink:0;}
+.dest-bar-track{flex:1;height:7px;background:var(–dex-dark);border:2px solid var(–screen-mid);}
+.dest-bar-fill{height:100%;background:repeating-linear-gradient(90deg,#4eff91 0,#4eff91 5px,transparent 5px,transparent 7px);width:0%;transition:width 1s steps(8);}
+
+/* ── GPS 頁 ── */
+.gps-screen{
+background:var(–screen-dark);
+border:4px solid var(–dex-dark);
+box-shadow:inset 2px 2px 0 rgba(0,0,0,.4),3px 3px 0 var(–dex-dark);
+padding:10px;display:flex;flex-direction:column;gap:8px;
+}
+.gps-radar{
+width:80px;height:80px;border-radius:50%;
+background:radial-gradient(circle,#003300,#001100);
+border:4px solid #00aa00;
+margin:0 auto;position:relative;
+box-shadow:0 0 12px rgba(0,200,0,.3);
+}
+.radar-line{
+position:absolute;top:50%;left:50%;
+width:50%;height:2px;
+background:linear-gradient(90deg,transparent,#00ff44);
+transform-origin:left center;
+animation:radarSpin 2s linear infinite;
+}
+@keyframes radarSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.radar-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:#00ff44;box-shadow:0 0 6px #00ff44;}
+.radar-dot:nth-child(2){top:25%;left:60%;}
+.radar-dot:nth-child(3){top:60%;left:25%;animation:blink .6s step-end infinite;}
+.gps-text{font-size:.4rem;color:var(–screen-bg);line-height:1.9;font-family:‘Noto Sans JP’,monospace;text-align:center;}
+.gps-btn{
+width:100%;padding:10px;
+background:#00aa00;border:4px solid var(–dex-dark);
+color:#fff;font-family:‘Press Start 2P’,monospace;font-size:.42rem;
+cursor:pointer;box-shadow:3px 3px 0 var(–dex-dark);
+}
+.gps-btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(–dex-dark);}
+.call-btn{
+width:100%;padding:9px;
+background:var(–dex-red2);border:4px solid var(–dex-dark);
+color:#fff;font-family:‘Press Start 2P’,monospace;font-size:.42rem;
+cursor:pointer;text-decoration:none;
+display:flex;align-items:center;justify-content:center;
+box-shadow:3px 3px 0 var(–dex-dark);
+}
+.ig-btn{
+width:100%;padding:9px;
+background:linear-gradient(135deg,#833ab4,#e1306c);
+border:4px solid var(–dex-dark);
+color:#fff;font-family:‘Press Start 2P’,monospace;font-size:.42rem;
+cursor:pointer;text-decoration:none;
+display:flex;align-items:center;justify-content:center;
+box-shadow:3px 3px 0 var(–dex-dark);
 }
 
-.card{
-  background:#fff;
-  padding:20px;
-  border-radius:18px;
-  box-shadow:0 4px 18px rgba(0,0,0,0.07);
+/* ════════════════════════
+方向鍵 + ABXY
+════════════════════════ */
+.controls{
+padding:12px 16px;
+background:var(–dex-red);
+border-top:4px solid var(–dex-dark);
+display:flex;justify-content:space-between;align-items:center;
+}
+.dpad{
+width:80px;height:80px;
+position:relative;flex-shrink:0;
+}
+.dpad-h,.dpad-v{
+position:absolute;background:var(–dex-dark);border-radius:2px;
+}
+.dpad-h{width:100%;height:30%;top:35%;left:0;}
+.dpad-v{height:100%;width:30%;left:35%;top:0;}
+.dpad-center{
+position:absolute;width:30%;height:30%;top:35%;left:35%;
+background:#222;z-index:2;
+}
+.dpad-btn{
+position:absolute;width:30%;height:30%;
+display:flex;align-items:center;justify-content:center;
+font-size:.6rem;cursor:pointer;z-index:3;color:rgba(255,255,255,.5);
+font-family:‘Press Start 2P’,monospace;
+}
+.dpad-up{top:0;left:35%;}
+.dpad-down{bottom:0;left:35%;}
+.dpad-left{top:35%;left:0;}
+.dpad-right{top:35%;right:0;}
+.dpad-btn:active{background:rgba(255,255,255,.1);}
+
+/* START/SELECT */
+.mid-btns{display:flex;flex-direction:column;gap:6px;align-items:center;}
+.sys-btn{
+padding:5px 10px;background:var(–dex-dark);
+border:2px solid rgba(255,255,255,.15);
+color:rgba(255,255,255,.4);
+font-family:‘Press Start 2P’,monospace;font-size:.32rem;
+cursor:pointer;border-radius:99px;
+box-shadow:1px 1px 0 rgba(0,0,0,.5);
+}
+.sys-btn:hover{background:#333;}
+.vol-display{font-size:.32rem;color:rgba(255,255,255,.35);text-align:center;margin-top:4px;}
+
+/* AB ボタン */
+.ab-btns{
+display:grid;grid-template-columns:1fr 1fr;
+gap:6px;width:72px;
+}
+.ab-btn{
+width:32px;height:32px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-family:‘Press Start 2P’,monospace;font-size:.45rem;
+cursor:pointer;border:3px solid var(–dex-dark);
+box-shadow:0 4px 0 var(–dex-dark),2px 2px 0 rgba(255,255,255,.1);
+transition:none;color:#fff;font-weight:bold;
+}
+.ab-btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(–dex-dark);}
+.btn-a{background:#cc2200;grid-column:2;}
+.btn-b{background:#1a44aa;grid-column:1;grid-row:1;}
+.btn-x{background:#cc8800;grid-column:1;grid-row:2;}
+.btn-y{background:#116611;grid-column:2;grid-row:2;}
+
+/* ════════════════════════
+音效靜音鍵
+════════════════════════ */
+#mute-btn{
+position:fixed;bottom:16px;right:16px;z-index:500;
+width:40px;height:40px;
+background:var(–dex-dark);
+border:3px solid var(–btn-yellow);
+color:var(–btn-yellow);font-size:1rem;
+cursor:pointer;box-shadow:3px 3px 0 rgba(0,0,0,.6);
+display:flex;align-items:center;justify-content:center;
+font-family:‘Press Start 2P’,monospace;
 }
 
-.info-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-.info-item{
-  background:var(--cream);
-  border-radius:12px;
-  padding:14px;
-}
-.info-label{
-  font-size:0.7rem;
-  color:var(--sand);
-  letter-spacing:0.06em;
-  text-transform:uppercase;
-  margin-bottom:4px;
-}
-.info-value{
-  font-size:0.95rem;
-  color:var(--dark);
-  font-weight:500;
-  line-height:1.4;
-}
-.personality-card{
-  background:var(--cream);
-  border-radius:12px;
-  padding:14px;
-  margin-top:10px;
-}
-.skill-card{
-  background:#f0f7f0;
-  border:1.5px solid #a5d6a7;
-  border-radius:12px;
-  padding:14px;
-  margin-top:10px;
-  font-size:0.92rem;
-  color:#1b5e20;
-  font-weight:500;
-  line-height:1.6;
-}
-
-.btn{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:8px;
-  padding:16px;
-  border-radius:14px;
-  text-decoration:none;
-  font-weight:500;
-  font-size:1rem;
-  transition:opacity 0.15s,transform 0.15s;
-  cursor:pointer;
-  border:none;
-  width:100%;
-}
-.btn:active{opacity:0.85;transform:scale(0.98);}
-.btn-primary{background:var(--accent);color:#fff;}
-.btn-ig{
-  background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
-  color:#fff;
-}
-
-.gps-card{
-  background:linear-gradient(135deg,#1a3a1c,#2e6030);
-  color:#fff;
-  padding:20px;
-  border-radius:18px;
-}
-.gps-desc{
-  font-size:0.88rem;
-  opacity:0.8;
-  margin-bottom:12px;
-}
-.btn-gps{
-  background:rgba(255,255,255,0.15);
-  color:#fff;
-  border:1.5px solid rgba(255,255,255,0.3);
-  backdrop-filter:blur(4px);
-}
-
-.fade{animation:fadeIn 0.3s ease;}
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(8px);}
-  to{opacity:1;transform:translateY(0);}
+/* 掃描線全域 */
+body::after{
+content:’’;position:fixed;inset:0;pointer-events:none;z-index:9999;
+background:repeating-linear-gradient(
+0deg,transparent 0,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 4px
+);
 }
 </style>
+
 </head>
 <body>
 
-<div class="lang-bar">
-  <button class="lang-btn active" onclick="setLang('zh',this)">中</button>
-  <button class="lang-btn" onclick="setLang('en',this)">EN</button>
-  <button class="lang-btn" onclick="setLang('ja',this)">日</button>
-</div>
+<div class="pokedex">
 
-<div class="hero">
-  <div class="avatar-ring">
-    <img src="https://github.com/godivanlife-creator/dere20240316/blob/main/IMG_0832.jpg?raw=true" alt="得意 Dere">
+  <!-- 頂燈區 -->
+
+  <div class="dex-top">
+    <div class="big-light"></div>
+    <div class="small-lights">
+      <div class="sml sml-r"></div>
+      <div class="sml sml-y"></div>
+      <div class="sml sml-g"></div>
+    </div>
+    <div class="dex-top-title">GODIVANLIFE DEX</div>
   </div>
-  <div class="hero-name">得意 Dere</div>
-  <div class="hero-sub">GodiVanLife Pet Tag</div>
-  <div class="hero-warning" id="t-warning"></div>
-</div>
 
-<div class="card-wrap" id="wrap">
+  <!-- 語言 -->
 
-  <div class="card">
-    <div class="info-grid">
-      <div class="info-item">
-        <div class="info-label" id="t-breed-label"></div>
-        <div class="info-value" id="t-breed"></div>
-      </div>
-      <div class="info-item">
-        <div class="info-label" id="t-personality-label"></div>
-        <div class="info-value" id="t-personality"></div>
+  <div class="lang-row">
+    <button class="lang-btn active" onclick="setLang('zh',this)">中文</button>
+    <button class="lang-btn" onclick="setLang('en',this)">ENG</button>
+    <button class="lang-btn" onclick="setLang('ja',this)">日本語</button>
+  </div>
+
+  <!-- 主螢幕 -->
+
+  <div class="main-screen-wrap">
+    <div class="main-screen">
+
+```
+  <!-- 精靈區 -->
+  <div class="sprite-area">
+    <div class="sprite-frame">
+      <img src="https://github.com/godivanlife-creator/dere20240316/blob/main/IMG_0832.jpg?raw=true"
+        alt="得意 Dere"
+        onerror="this.style.fontSize='3rem';this.style.lineHeight='92px';this.style.textAlign='center';this.outerHTML='<div style=\'font-size:3rem;line-height:92px;text-align:center;width:100%\'>🐶</div>'">
+    </div>
+    <div class="dex-info-right">
+      <div class="dex-number">No.0428</div>
+      <div class="dex-name-main" id="dex-name">得意<br>DERE</div>
+      <div class="dex-name-sub" id="dex-species"></div>
+      <div class="dex-types">
+        <div class="dex-type" id="type1">NORMAL</div>
+        <div class="dex-type" id="type2">SPORTS</div>
       </div>
     </div>
-    <div class="personality-card">
-      <div class="info-label" id="t-about-label"></div>
-      <div class="info-value" id="t-about"></div>
+  </div>
+
+  <!-- HP 列 -->
+  <div class="hp-section">
+    <div class="hp-row">
+      <div class="hp-label-px">HP</div>
+      <div class="hp-track"><div class="hp-bar low" id="hp-bar" style="width:28%;"></div></div>
+      <div class="hp-num">28/100</div>
     </div>
-    <div class="skill-card" id="t-skill"></div>
+    <div class="status-tag" id="status-tag"></div>
   </div>
 
-  <a class="btn btn-primary" href="tel:0988313193" id="t-call"></a>
-
-  <div class="gps-card">
-    <p class="gps-desc" id="t-gps-desc"></p>
-    <button class="btn btn-gps" id="gps-btn" onclick="sendGPS()"></button>
+  <!-- 對話框 -->
+  <div class="dialog-area">
+    <div class="dialog-line" id="dialog-text"></div>
+    <span class="dialog-cursor"></span>
   </div>
-
-  <a class="btn btn-ig" href="https://www.instagram.com/dere20240316/" target="_blank" id="t-ig"></a>
 
 </div>
+```
+
+  </div>
+
+  <!-- 折頁 -->
+
+  <div class="hinge"></div>
+
+  <!-- 頁籤 -->
+
+  <div class="tab-row">
+    <button class="dex-tab active" onclick="switchTab('data',this)" id="tab-data"></button>
+    <button class="dex-tab" onclick="switchTab('chat',this)" id="tab-chat"></button>
+    <button class="dex-tab" onclick="switchTab('destiny',this)" id="tab-destiny"></button>
+    <button class="dex-tab" onclick="switchTab('gps',this)" id="tab-gps"></button>
+  </div>
+
+  <!-- 下半面板 -->
+
+  <div class="dex-lower">
+
+```
+<!-- DATA 頁 -->
+<div class="dex-page active" id="page-data">
+  <div class="data-screen">
+    <div class="data-row"><div class="data-key" id="dk1"></div><div class="data-val noto" id="dv1"></div></div>
+    <div class="data-row"><div class="data-key" id="dk2"></div><div class="data-val noto" id="dv2"></div></div>
+    <div class="data-row"><div class="data-key" id="dk3"></div><div class="data-val noto" id="dv3"></div></div>
+    <div class="data-row"><div class="data-key" id="dk4"></div><div class="data-val noto" id="dv4"></div></div>
+    <div class="data-row"><div class="data-key" id="dk5"></div><div class="data-val noto" id="dv5" style="color:var(--btn-yellow)"></div></div>
+  </div>
+</div>
+
+<!-- CHAT 頁 -->
+<div class="dex-page" id="page-chat">
+  <div class="chat-mode-row">
+    <button class="chat-mode-btn active" id="cm-pet" onclick="switchMode('pet')">🐶 <span id="cm-pet-label"></span></button>
+    <button class="chat-mode-btn" id="cm-exp" onclick="switchMode('expert')">👩‍⚕️ <span id="cm-exp-label"></span></button>
+  </div>
+  <div class="chat-screen">
+    <div class="chat-msgs" id="chat-msgs"></div>
+    <div class="quick-row" id="quick-row"></div>
+    <div class="chat-input-row">
+      <input class="chat-inp" id="chat-inp" type="text" autocomplete="off" onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <button class="chat-send" id="send-btn" onclick="sendMsg()">▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- DESTINY 頁 -->
+<div class="dex-page" id="page-destiny">
+  <div class="destiny-screen">
+    <div class="dest-header">
+      <div class="dest-label" id="dest-label"></div>
+      <div class="dest-date" id="dest-date"></div>
+    </div>
+    <span class="dest-emoji" id="dest-emoji"></span>
+    <div class="dest-msg noto" id="dest-msg"></div>
+    <div class="dest-bars" id="dest-bars"></div>
+  </div>
+</div>
+
+<!-- GPS 頁 -->
+<div class="dex-page" id="page-gps">
+  <div class="gps-screen">
+    <div class="gps-radar">
+      <div class="radar-line"></div>
+      <div class="radar-dot"></div>
+      <div class="radar-dot"></div>
+      <div class="radar-dot"></div>
+    </div>
+    <div class="gps-text noto" id="gps-text"></div>
+    <button class="gps-btn" id="gps-btn" onclick="sendGPS()"></button>
+    <a class="call-btn" href="tel:0988313193" id="call-btn"></a>
+    <a class="ig-btn" href="https://www.instagram.com/dere20240316/" target="_blank" id="ig-btn"></a>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- 實體按鍵區 -->
+
+  <div class="controls">
+    <div class="dpad">
+      <div class="dpad-h"></div>
+      <div class="dpad-v"></div>
+      <div class="dpad-center"></div>
+      <div class="dpad-btn dpad-up" onclick="dpadNav(-1)">▲</div>
+      <div class="dpad-btn dpad-down" onclick="dpadNav(1)">▼</div>
+      <div class="dpad-btn dpad-left" onclick="dpadTab(-1)">◀</div>
+      <div class="dpad-btn dpad-right" onclick="dpadTab(1)">▶</div>
+    </div>
+    <div class="mid-btns">
+      <button class="sys-btn" onclick="switchTabByName('data')">SELECT</button>
+      <button class="sys-btn" onclick="switchTabByName('chat')">START</button>
+      <div class="vol-display" id="vol-disp">♪ ON</div>
+    </div>
+    <div class="ab-btns">
+      <div class="ab-btn btn-b" onclick="dpadTab(-1)">B</div>
+      <div class="ab-btn btn-a" onclick="dpadTab(1)">A</div>
+      <div class="ab-btn btn-x" onclick="switchTabByName('destiny')">X</div>
+      <div class="ab-btn btn-y" onclick="switchTabByName('gps')">Y</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 靜音鍵 -->
+
+<button id="mute-btn" onclick="toggleMuteUI()">🔊</button>
 
 <script>
-const i18n={
+/* ════════════════════════════════
+   設定
+════════════════════════════════ */
+const PET={
+  nameZh:'得意',nameEn:'Dere',
+  breed_en:'Jack Russell Terrier',
+  personality_en:'Energetic, sporty, loves soccer and basketball',
+  special_en:'Can dribble a ball with his head, returns it to owner',
+  phone:'0988313193',gps:'0988313193',
+  ig:'https://www.instagram.com/dere20240316/',
+};
+
+/* ════════════════════════════════
+   多語系
+════════════════════════════════ */
+const UI={
   zh:{
-    warning:"📍 得意迷路了！請幫忙回報位置 🥺",
-    breedLabel:"🐶 品種",
-    breed:"傑克羅素㹴",
-    personalityLabel:"✨ 個性",
-    personality:"活潑得意 · 運動狂",
-    aboutLabel:"⚽ 關於得意",
-    about:"超級愛玩足球和籃球 🏀 會用頭運球，還會把球控回來給主人！",
-    skill:"🏆 絕技：頭部運球控球、把球送回主人手中",
-    call:"📞 聯絡得意的主人",
-    gpsDesc:"發現得意了嗎？請點擊下方按鈕回報位置給主人",
-    gpsBtn:"📍 立即回報位置",
-    gpsLoading:"定位中...",
-    gpsError:"定位失敗，請重試",
-    ig:"📸 看得意的 IG 日常"
+    species:'運動犬',type1:'一般',type2:'運動',
+    statusTag:'▼ 走失中 ▼',
+    dialog:'野生的【得意】出現了！\n牠似乎迷路了...',
+    tabs:['資料','對話','命運','緊急'],
+    dk:['品種','個性','特徵','技能','絕招'],
+    dv:['傑克羅素㹴','活潑・運動狂','愛球・愛撒嬌','頭部運球術','把球送回主人！'],
+    cmPet:'跟得意說話',cmExp:'寵物圖鑑',
+    destLabel:'今日命運',
+    bars:['撿食運','玩球能量','散步指數','撒嬌指數'],
+    gpsText:'發現得意了嗎？\n點擊下方按鈕\n把位置傳給主人！',
+    gpsBtn:'📡 發送 GPS 位置',gpsLoading:'定位中...',gpsError:'定位失敗',
+    callBtn:'📞 撥打主人電話',
+    igBtn:'📸 IG 日常紀錄',
+    inputPh:['跟得意說話...','查詢寵物資訊...'],
+    quick:[
+      ['你今天心情好嗎？','你最喜歡什麼？','你想吃什麼？','你喜歡我嗎？'],
+      ['傑克羅素怎麼訓練？','需要多少運動？','發現走失狗怎辦？','牠受傷了怎辦？']
+    ],
+    greet:[
+      '汪汪！！我是得意！\n你好呀～\n今天超想玩球！🐾',
+      '您好！GodiVanLife 圖鑑 AI！\n請問有什麼可以幫您？\n走失緊急請按 Y 鍵！'
+    ],
+    destinies:[
+      {emoji:'⚽',msg:'今天是球技大爆發日！帶我出去踢球吧！'},
+      {emoji:'🍗',msg:'肚子咕嚕咕嚕叫～今天是撿食日！'},
+      {emoji:'😴',msg:'今天想曬太陽打盹，去公園就好！'},
+      {emoji:'🏆',msg:'今天能量滿點！要向每隻狗炫耀頭球！'},
+      {emoji:'🌧️',msg:'今天黏人模式開啟，多抱抱我！'},
+      {emoji:'🚀',msg:'今天想快跑！帶我去最長的步道！'},
+      {emoji:'🌟',msg:'今天特別閃亮，走路很吸睛！'},
+      {emoji:'🍀',msg:'幸運日！今天散步可能有驚喜！'},
+    ],
   },
   en:{
-    warning:"📍 Dere is lost! Please help report the location 🥺",
-    breedLabel:"🐶 Breed",
-    breed:"Jack Russell Terrier",
-    personalityLabel:"✨ Personality",
-    personality:"Energetic · Sports lover",
-    aboutLabel:"⚽ About Dere",
-    about:"Obsessed with soccer and basketball 🏀 Can dribble with his head and return the ball back to his owner!",
-    skill:"🏆 Special skill: heading the ball and bringing it back to owner",
-    call:"📞 Call Dere's Owner",
-    gpsDesc:"Found Dere? Please send your location to the owner",
-    gpsBtn:"📍 Send Location Now",
-    gpsLoading:"Getting location...",
-    gpsError:"Location failed, please retry",
-    ig:"📸 Dere on Instagram"
+    species:'Sports Dog',type1:'NORMAL',type2:'SPORTS',
+    statusTag:'▼ LOST ▼',
+    dialog:'Wild [DERE] appeared!\nSeems to be lost...',
+    tabs:['DATA','CHAT','FATE','SOS'],
+    dk:['SPECIES','TYPE','TRAIT','SKILL','MOVE'],
+    dv:['Jack Russell','Energetic・Sporty','Loves ball・Cuddly','Head Dribble','Returns ball to owner!'],
+    cmPet:'Talk to Dere',cmExp:'Pet Dex',
+    destLabel:"TODAY'S FATE",
+    bars:['Snack','Ball','Walk','Cuddle'],
+    gpsText:"Found Dere?\nTap below to send\nyour location!",
+    gpsBtn:'📡 SEND GPS LOCATION',gpsLoading:'LOCATING...',gpsError:'Location failed',
+    callBtn:"📞 CALL OWNER",
+    igBtn:'📸 IG DAILY LOG',
+    inputPh:['Talk to Dere...','Ask pet questions...'],
+    quick:[
+      ["How are you feeling?","What's your fav thing?","Are you hungry?","Do you like me?"],
+      ["How to train a JRT?","How much exercise?","Found a lost dog?","Dog looks injured?"]
+    ],
+    greet:[
+      'WOOF WOOF!! I\'m Dere!\nHi there~\nI wanna play ball today! 🐾',
+      'Hello! GodiVanLife Dex AI!\nHow can I help you?\nFor emergency, press Y!'
+    ],
+    destinies:[
+      {emoji:'⚽',msg:"Big ball day! Take me out — I'll header one in!"},
+      {emoji:'🍗',msg:'Tummy rumbling~ Scavenger mode activated!'},
+      {emoji:'😴',msg:'Lazy mode ON. Park + sunshine = perfect day.'},
+      {emoji:'🏆',msg:'MAX ENERGY! Must show off heading skills!'},
+      {emoji:'🌧️',msg:'Clingy mode activated. Extra hugs required!'},
+      {emoji:'🚀',msg:'Running energy FULL. Need the longest trail!'},
+      {emoji:'🌟',msg:'Extra shiny today! All eyes on me!'},
+      {emoji:'🍀',msg:'Lucky day! Something good will happen!'},
+    ],
   },
   ja:{
-    warning:"📍 デレが迷子になりました！位置情報を送ってください 🥺",
-    breedLabel:"🐶 種類",
-    breed:"ジャック・ラッセル・テリア",
-    personalityLabel:"✨ 性格",
-    personality:"元気いっぱい · スポーツ好き",
-    aboutLabel:"⚽ デレについて",
-    about:"サッカーとバスケが大好き 🏀 頭でドリブルができて、ボールを飼い主に返すこともできる！",
-    skill:"🏆 得意技：頭部でのドリブル＆ボールを飼い主に戻す",
-    call:"📞 飼い主に電話",
-    gpsDesc:"デレを見つけたら、位置情報を飼い主に送ってください",
-    gpsBtn:"📍 今すぐ位置を送る",
-    gpsLoading:"取得中...",
-    gpsError:"失敗しました",
-    ig:"📸 インスタグラムを見る"
+    species:'スポーツ犬',type1:'ノーマル',type2:'スポーツ',
+    statusTag:'▼ 迷子中 ▼',
+    dialog:'野生の【デレ】が現れた！\n迷子になったみたい...',
+    tabs:['データ','トーク','運勢','緊急'],
+    dk:['しゅるい','タイプ','とくちょう','わざ','とくわざ'],
+    dv:['JRテリア','元気・スポーツ','ボール好き・甘えん坊','頭部ドリブル術','ボールを飼い主に返す！'],
+    cmPet:'デレと話す',cmExp:'ペット図鑑',
+    destLabel:'今日の運勢',
+    bars:['拾い食い','ボール','散歩','甘え'],
+    gpsText:'デレを見つけた？\n下のボタンで\n位置情報を送って！',
+    gpsBtn:'📡 GPS位置を送る',gpsLoading:'測位中...',gpsError:'失敗しました',
+    callBtn:'📞 飼い主に電話',
+    igBtn:'📸 IG日常記録',
+    inputPh:['デレに話しかける...','ペット情報を検索...'],
+    quick:[
+      ['今日の気分は？','何が好き？','お腹すいてる？','私のこと好き？'],
+      ['JRTのしつけ方？','必要な運動量は？','迷子の犬を見つけた','怪我してるみたい']
+    ],
+    greet:[
+      'ワンワン！！デレだよ！\nこんにちは～\n今日はボールで遊びたい！🐾',
+      'こんにちは！GodiVanLife図鑑AI！\nなんでもどうぞ！\n緊急はYボタンを押して！'
+    ],
+    destinies:[
+      {emoji:'⚽',msg:'今日はボール技術が爆発する日！外に連れ出して！'},
+      {emoji:'🍗',msg:'お腹がグーグー～今日は拾い食いモード全開！'},
+      {emoji:'😴',msg:'のんびりモード。公園でお昼寝するだけでいい！'},
+      {emoji:'🏆',msg:'エネルギー全開！全犬にヘディング自慢する！'},
+      {emoji:'🌧️',msg:'甘えたいモード発動。いっぱい抱っこして！'},
+      {emoji:'🚀',msg:'全力疾走したい！一番長いコースへ！'},
+      {emoji:'🌟',msg:'今日は特別輝いてる！みんなの視線を独占！'},
+      {emoji:'🍀',msg:'ラッキーデー！散歩で何かいいことあるかも！'},
+    ],
   }
 };
 
-let lang='zh';
+/* ════════════════════════════════
+   狀態
+════════════════════════════════ */
+let lang='zh', mode='pet', isThinking=false, chatHistory=[];
+let todayDestiny, todayBars;
+const TABS=['data','chat','destiny','gps'];
+let currentTabIdx=0;
 
+function seedRandom(s){return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646;};}
+function getTodaySeed(){const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();}
+
+function initToday(){
+  const rng=seedRandom(getTodaySeed());
+  const t=UI[lang];
+  todayDestiny=t.destinies[Math.floor(rng()*t.destinies.length)];
+  todayBars=[Math.floor(rng()*50)+50,Math.floor(rng()*50)+50,Math.floor(rng()*50)+50,Math.floor(rng()*50)+50];
+}
+
+/* ════════════════════════════════
+   渲染
+════════════════════════════════ */
 function applyLang(){
-  const t=i18n[lang];
-  document.getElementById("t-warning").innerText=t.warning;
-  document.getElementById("t-breed-label").innerText=t.breedLabel;
-  document.getElementById("t-breed").innerText=t.breed;
-  document.getElementById("t-personality-label").innerText=t.personalityLabel;
-  document.getElementById("t-personality").innerText=t.personality;
-  document.getElementById("t-about-label").innerText=t.aboutLabel;
-  document.getElementById("t-about").innerText=t.about;
-  document.getElementById("t-skill").innerText=t.skill;
-  document.getElementById("t-call").innerText=t.call;
-  document.getElementById("t-gps-desc").innerText=t.gpsDesc;
-  document.getElementById("gps-btn").innerText=t.gpsBtn;
-  document.getElementById("t-ig").innerText=t.ig;
+  initToday();
+  const t=UI[lang];
+  // 主螢幕
+  document.getElementById('dex-species').innerText=t.species;
+  document.getElementById('type1').innerText=t.type1;
+  document.getElementById('type2').innerText=t.type2;
+  document.getElementById('status-tag').innerText=t.statusTag;
+  typeDialog(t.dialog);
+  // 頁籤
+  ['data','chat','destiny','gps'].forEach((id,i)=>{
+    document.getElementById('tab-'+id).innerText=t.tabs[i];
+  });
+  // DATA
+  t.dk.forEach((k,i)=>{document.getElementById('dk'+(i+1)).innerText=k;});
+  t.dv.forEach((v,i)=>{document.getElementById('dv'+(i+1)).innerText=v;});
+  // CHAT
+  document.getElementById('cm-pet-label').innerText=t.cmPet;
+  document.getElementById('cm-exp-label').innerText=t.cmExp;
+  document.getElementById('chat-inp').placeholder=t.inputPh[mode==='pet'?0:1];
+  renderQuick();
+  // DESTINY
+  const now=new Date();
+  document.getElementById('dest-label').innerText=t.destLabel;
+  document.getElementById('dest-date').innerText=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+  document.getElementById('dest-emoji').innerText=todayDestiny.emoji;
+  document.getElementById('dest-msg').innerText=todayDestiny.msg;
+  const barsEl=document.getElementById('dest-bars');
+  barsEl.innerHTML='';
+  t.bars.forEach((lbl,i)=>{
+    barsEl.innerHTML+=`<div class="dest-bar-row"><div class="dest-bar-lbl">${lbl}</div><div class="dest-bar-track"><div class="dest-bar-fill" id="dbar${i}"></div></div></div>`;
+  });
+  setTimeout(()=>todayBars.forEach((v,i)=>{const el=document.getElementById('dbar'+i);if(el)el.style.width=v+'%';}),300);
+  // GPS
+  document.getElementById('gps-text').innerText=t.gpsText;
+  document.getElementById('gps-btn').innerText=t.gpsBtn;
+  document.getElementById('call-btn').innerText=t.callBtn;
+  document.getElementById('ig-btn').innerText=t.igBtn;
 }
 
 function setLang(l,el){
-  lang=l;
-  applyLang();
+  lang=l;chatHistory=[];
+  applyLang();clearChat();addGreeting();
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
-  const wrap=document.getElementById("wrap");
-  wrap.classList.remove("fade");
-  void wrap.offsetWidth;
-  wrap.classList.add("fade");
 }
 
-applyLang();
+/* 打字機 */
+function typeDialog(text){
+  const el=document.getElementById('dialog-text');
+  el.innerText='';
+  const lines=text.split('\n');
+  let li=0,i=0,chars=lines[0].split('');
+  function next(){
+    if(li>=lines.length)return;
+    if(i<chars.length){el.innerText+=chars[i++];setTimeout(next,45);}
+    else if(li<lines.length-1){el.innerText+='\n';li++;chars=lines[li].split('');i=0;setTimeout(next,120);}
+  }
+  next();
+}
 
+/* ════════════════════════════════
+   頁籤切換
+════════════════════════════════ */
+function switchTab(name, el){
+  TABS.forEach((t,i)=>{
+    document.getElementById('page-'+t).classList.toggle('active',t===name);
+    document.getElementById('tab-'+t).classList.toggle('active',t===name);
+    if(t===name) currentTabIdx=i;
+  });
+}
+function switchTabByName(name){
+  const btn=document.getElementById('tab-'+name);
+  switchTab(name,btn);
+}
+function dpadTab(dir){
+  currentTabIdx=(currentTabIdx+dir+TABS.length)%TABS.length;
+  switchTabByName(TABS[currentTabIdx]);
+}
+function dpadNav(dir){
+  const msgs=document.getElementById('chat-msgs');
+  msgs.scrollTop+=dir*40;
+}
+
+/* ════════════════════════════════
+   聊天
+════════════════════════════════ */
+function clearChat(){document.getElementById('chat-msgs').innerHTML='';}
+function addGreeting(){
+  const t=UI[lang];
+  const g=t.greet[mode==='pet'?0:1];
+  addBotMsg(g);chatHistory=[{role:'assistant',content:g}];
+}
+function addBotMsg(text){
+  const el=document.getElementById('chat-msgs');
+  const d=document.createElement('div');d.className='msg bot';
+  d.innerHTML=`<div class="msg-ic">${mode==='pet'?'🐶':'👩‍⚕️'}</div><div class="msg-bub">${text.replace(/\n/g,'<br>')}</div>`;
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+function addUserMsg(text){
+  const el=document.getElementById('chat-msgs');
+  const d=document.createElement('div');d.className='msg user';
+  d.innerHTML=`<div class="msg-ic">🧑</div><div class="msg-bub">${text}</div>`;
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+function showTyping(){
+  const el=document.getElementById('chat-msgs');
+  const d=document.createElement('div');d.className='msg bot';d.id='typing-msg';
+  d.innerHTML=`<div class="msg-ic">${mode==='pet'?'🐶':'👩‍⚕️'}</div><div class="typing-bub"><div class="tp"></div><div class="tp"></div><div class="tp"></div></div>`;
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+function removeTyping(){const t=document.getElementById('typing-msg');if(t)t.remove();}
+function renderQuick(){
+  const t=UI[lang];
+  const qs=t.quick[mode==='pet'?0:1];
+  document.getElementById('quick-row').innerHTML=qs.map(q=>`<button class="qbtn" onclick="sendQuick('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');
+}
+function switchMode(m){
+  mode=m;chatHistory=[];
+  document.getElementById('cm-pet').classList.toggle('active',m==='pet');
+  document.getElementById('cm-exp').classList.toggle('active',m==='expert');
+  const t=UI[lang];
+  document.getElementById('chat-inp').placeholder=t.inputPh[m==='pet'?0:1];
+  clearChat();renderQuick();addGreeting();
+}
+function sendQuick(q){document.getElementById('chat-inp').value=q;sendMsg();}
+
+async function sendMsg(){
+  if(isThinking)return;
+  const inp=document.getElementById('chat-inp');
+  const text=inp.value.trim();if(!text)return;
+  inp.value='';
+  addUserMsg(text);chatHistory.push({role:'user',content:text});
+  isThinking=true;document.getElementById('send-btn').disabled=true;
+  showTyping();
+  const info=`Name:${PET.nameZh}(${PET.nameEn}),Breed:${PET.breed_en},Personality:${PET.personality_en},Skill:${PET.special_en},Phone:${PET.phone}`;
+  const sys=mode==='pet'
+    ?`You are ${PET.nameZh}(${PET.nameEn}), a ${PET.breed_en}. Speak AS THE DOG in first person — playful, energetic, loves ball sports. Like a Pokémon speaking. Keep replies to 2-3 short sentences. Use dog sounds. Info:${info}. Reply in same language as user.`
+    :`You are a GodiVanLife Pokédex AI for pets. Expert in ${PET.breed_en}. If lost pet emergency, guide to press Y or call ${PET.phone}. Info:${info}. Brief replies 3-4 sentences. Reply in same language as user.`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:chatHistory.slice(-8)})});
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||'...';
+    removeTyping();addBotMsg(reply);chatHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    removeTyping();
+    addBotMsg({zh:'訊號中斷！請重試！',en:'Signal lost! Try again!',ja:'通信が切れた！もう一度！'}[lang]);
+  }
+  isThinking=false;document.getElementById('send-btn').disabled=false;
+}
+
+/* ════════════════════════════════
+   GPS
+════════════════════════════════ */
 function sendGPS(){
-  const btn=document.getElementById("gps-btn");
-  const t=i18n[lang];
-  btn.innerText=t.gpsLoading;
-  btn.disabled=true;
+  const btn=document.getElementById('gps-btn');
+  const t=UI[lang];
+  btn.innerText=t.gpsLoading;btn.disabled=true;
   navigator.geolocation.getCurrentPosition(pos=>{
-    const lat=pos.coords.latitude.toFixed(6);
-    const lng=pos.coords.longitude.toFixed(6);
+    const lat=pos.coords.latitude.toFixed(6),lng=pos.coords.longitude.toFixed(6);
     const url=`https://maps.google.com/?q=${lat},${lng}`;
-    const msg=encodeURIComponent("🐶 發現得意 Dere！目前位置："+url);
-    window.location.href=`sms:0988313193?body=${msg}`;
-    resetGPS();
-  },()=>{
-    alert(t.gpsError);
-    resetGPS();
-  },{enableHighAccuracy:true,timeout:8000,maximumAge:0});
+    const msg=encodeURIComponent(`🐶 發現${PET.nameZh}！位置：`+url);
+    window.location.href=`sms:${PET.gps}?body=${msg}`;
+    btn.disabled=false;btn.innerText=t.gpsBtn;
+  },()=>{alert(t.gpsError);btn.disabled=false;btn.innerText=t.gpsBtn;},{enableHighAccuracy:true,timeout:8000,maximumAge:0});
 }
 
-function resetGPS(){
-  const btn=document.getElementById("gps-btn");
-  btn.disabled=false;
-  btn.innerText=i18n[lang].gpsBtn;
+/* ════════════════════════════════
+   8-BIT 戰鬥音樂引擎
+════════════════════════════════ */
+let audioCtx=null, masterGain=null, isMuted=false, loopTimer=null, scheduledNodes=[];
+
+function startMusic(){
+  try{
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    masterGain=audioCtx.createGain();masterGain.gain.value=0.5;
+    masterGain.connect(audioCtx.destination);
+    scheduleLoop();
+  }catch(e){}
 }
+const NOTE={C3:130.81,D3:146.83,E3:164.81,F3:174.61,G3:196,A3:220,B3:246.94,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.25,Bb3:233.08,Gb4:369.99,Ab4:415.30,Bb4:466.16,R:0};
+const MELODY=[{n:'E4',d:.125},{n:'E4',d:.125},{n:'R',d:.125},{n:'E4',d:.125},{n:'R',d:.125},{n:'C4',d:.125},{n:'E4',d:.25},{n:'G4',d:.5},{n:'R',d:.25},{n:'G3',d:.25},{n:'C4',d:.375},{n:'R',d:.125},{n:'G3',d:.25},{n:'R',d:.25},{n:'E3',d:.375},{n:'R',d:.125},{n:'A3',d:.25},{n:'B3',d:.25},{n:'Bb3',d:.125},{n:'A3',d:.25},{n:'G3',d:.25},{n:'E4',d:.25},{n:'G4',d:.25},{n:'A4',d:.25},{n:'F4',d:.25},{n:'G4',d:.25},{n:'R',d:.125},{n:'E4',d:.25},{n:'C4',d:.125},{n:'D4',d:.125},{n:'B3',d:.5},{n:'R',d:.5}];
+const BASS=[{n:'C3',d:.25},{n:'C3',d:.25},{n:'G3',d:.25},{n:'C3',d:.25},{n:'C3',d:.25},{n:'G3',d:.25},{n:'E3',d:.25},{n:'G3',d:.25},{n:'A3',d:.25},{n:'A3',d:.25},{n:'F3',d:.25},{n:'A3',d:.25},{n:'F3',d:.25},{n:'G3',d:.25},{n:'E3',d:.25},{n:'G3',d:.25},{n:'C3',d:.25},{n:'C3',d:.25},{n:'G3',d:.25},{n:'C3',d:.25},{n:'A3',d:.25},{n:'G3',d:.25},{n:'F3',d:.25},{n:'E3',d:.25},{n:'D3',d:.25},{n:'D3',d:.25},{n:'A3',d:.25},{n:'D3',d:.25},{n:'G3',d:.25},{n:'F3',d:.25},{n:'E3',d:.25},{n:'D3',d:.25}];
+const DRUM=[1,0,0,0,1,0,1,0,1,0,0,0,1,0,1,1];
+
+function makeOsc(freq,type,st,dur,vol){
+  if(!freq||!audioCtx)return;
+  const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+  o.type=type;o.frequency.setValueAtTime(freq,st);
+  g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(vol,st+0.005);
+  g.gain.setValueAtTime(vol,st+dur-0.04);g.gain.linearRampToValueAtTime(0,st+dur);
+  o.connect(g);g.connect(masterGain);o.start(st);o.stop(st+dur+0.01);
+  scheduledNodes.push(o,g);
+}
+function makeDrum(st,kick){
+  if(!audioCtx)return;
+  const buf=audioCtx.createBuffer(1,Math.floor(audioCtx.sampleRate*.08),audioCtx.sampleRate);
+  const data=buf.getChannelData(0);
+  for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*(1-i/data.length);
+  const src=audioCtx.createBufferSource();src.buffer=buf;
+  const g=audioCtx.createGain();const f=audioCtx.createBiquadFilter();
+  f.type=kick?'lowpass':'highpass';f.frequency.value=kick?200:3000;
+  g.gain.setValueAtTime(kick?.45:.16,st);g.gain.exponentialRampToValueAtTime(0.001,st+.08);
+  src.connect(f);f.connect(g);g.connect(masterGain);src.start(st);src.stop(st+.1);
+  scheduledNodes.push(src,g);
+}
+function scheduleLoop(){
+  if(!audioCtx)return;
+  const BPM=168,BEAT=60/BPM,STEP=BEAT/4;
+  const startT=audioCtx.currentTime+0.1;
+  let t=startT;
+  for(const n of MELODY){const f=NOTE[n.n]||0,dur=n.d*BEAT*4;if(f)makeOsc(f*2,'square',t,dur*.85,.16);t+=dur;}
+  const loopLen=t-startT;
+  t=startT;
+  for(const n of BASS){const f=NOTE[n.n]||0,dur=n.d*BEAT*4;if(f)makeOsc(f,'triangle',t,dur*.7,.2);t+=dur;}
+  const reps=Math.ceil(loopLen/(STEP*DRUM.length));
+  for(let r=0;r<reps;r++)for(let s=0;s<DRUM.length;s++){const dt=startT+r*STEP*DRUM.length+s*STEP;if(dt>=startT+loopLen)break;if(DRUM[s])makeDrum(dt,s===0||s===4||s===8||s===12);}
+  loopTimer=setTimeout(()=>{scheduledNodes.forEach(n=>{try{n.disconnect();}catch(e){}});scheduledNodes=[];scheduleLoop();},(loopLen-.5)*1000);
+}
+function toggleMuteUI(){
+  isMuted=!isMuted;
+  if(masterGain&&audioCtx)masterGain.gain.setTargetAtTime(isMuted?0:.5,audioCtx.currentTime,.1);
+  const btn=document.getElementById('mute-btn');
+  btn.innerText=isMuted?'🔇':'🔊';
+  document.getElementById('vol-disp').innerText=isMuted?'♪ OFF':'♪ ON';
+}
+function unlockAudio(){startMusic();document.removeEventListener('touchstart',unlockAudio);document.removeEventListener('click',unlockAudio);}
+document.addEventListener('DOMContentLoaded',()=>{try{startMusic();}catch(e){}});
+document.addEventListener('touchstart',unlockAudio,{once:true});
+document.addEventListener('click',unlockAudio,{once:true});
+
+/* ════════════════════════════════
+   Init
+════════════════════════════════ */
+applyLang();
+addGreeting();
 </script>
+
 </body>
 </html>
